@@ -53,8 +53,9 @@ sequenceDiagram
     end
 ```
 
-### Sequence diagram Admin create class
-
+### Sequence diagram Admin create class Group like (1st)
+we have 3 years in the heigh school 1st year, 2nd year and 3rd year 
+for each year we have a speciality like luangues, scientific, mathematics, technique mathematics and so on 
 
 ### Sequence diagram admin create cours 
 
@@ -75,20 +76,117 @@ classDiagram
         #userId: int
         #email: string
         #password: string
+        #name: string
+        #createdAt: date
         +login()
+        +logout()
+        +updateProfile()
     }
 
     class Student {
         +studentId: int
-        +class: string
+        +specialityId: int
+        +accessToken: string
         +viewCourses()
+        +takExam()
+        +downloadCourse()
+        +submitAssignment()
     }
 
     class Admin {
         +adminId: int
+        +approvPermissions: boolean
         +approvStudent()
+        +rejectStudent()
+        +addCourse()
+        +addExam()
+        +deleteStudent()
+        +viewAllStudents()
     }
+
+    class AcademicLevel {
+        <<enumeration>>
+        FIRST_YEAR
+        SECOND_YEAR
+        THIRD_YEAR
+    }
+
+    class Speciality {
+        +specialityId: int
+        +name: string
+        +description: string
+        +level: AcademicLevel
+        +addCourse()
+        +getStudents()
+        +getCourses()
+    }
+
+    class Course {
+        +courseId: int
+        +title: string
+        +description: string
+        +specialityId: int
+        +createdBy: int
+        +format: string
+        +addSection()
+        +addMaterial()
+    }
+
+    class Section {
+        +sectionId: int
+        +courseId: int
+        +title: string
+        +order: int
+        +addMaterial()
+    }
+
+    class Material {
+        +materialId: int
+        +sectionId: int
+        +type: string
+        +content: file
+        +uploadedDate: date
+    }
+
+    class Exam {
+        +examId: int
+        +courseId: int
+        +title: string
+        +passingScore: int
+        +duration: int
+        +createQuestion()
+        +evaluateExam()
+    }
+
+    class Question {
+        +questionId: int
+        +examId: int
+        +text: string
+        +options: string[]
+        +correctAnswer: string
+        +difficulty: string
+    }
+
+
 
     User <|-- Student
     User <|-- Admin
+    
+    Speciality "1" -- "0..*" Student : enrolls
+    Speciality "1" -- "0..*" Course : contains
+    AcademicLevel "1" -- "0..*" Speciality : has
+    
+    Course "1" -- "0..*" Section : contains
+    Section "1" -- "0..*" Material : has
+    
+    Course "1" -- "0..*" Exam : has
+    Exam "1" -- "0..*" Question : contains
+    
+    Admin "1" -- "0..*" Course : creates
+    Admin "1" -- "0..*" Exam : creates
+    
+    Student "0..*" -- "0..*" Course : takes
+
+
+    
 ```
