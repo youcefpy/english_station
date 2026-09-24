@@ -33,3 +33,62 @@ sequenceDiagram
         App-->>Student: Registration not allowed
     end
 ```
+
+### Sequence diagram Login Student
+
+```mermaid
+sequenceDiagram
+    actor Student
+    participant App
+    participant DB
+
+    Student->>App:Login()
+    App->>DB:Check if student in database (Student)
+    alt Student in DATABASE
+        DB->>App: Student exits count(1)
+        App->>Student:redirect to home_page()
+    else Student not in DATABASE
+        DB-->>App:Student does not exists
+        App-->>Student:email or Password incorrect. please try again with correct creadentials
+    end
+```
+
+### Sequence diagram Admin create class
+
+
+### Sequence diagram admin create cours 
+
+### Sequence diagram admin create chapter
+
+### Sequence diagram admin affect cour to chapter
+
+### Sequence diagram admin affect cours to class
+
+
+## Class diagram
+
+# Class Diagram
+
+```mermaid
+classDiagram
+    class User {
+        #userId: int
+        #email: string
+        #password: string
+        +login()
+    }
+
+    class Student {
+        +studentId: int
+        +class: string
+        +viewCourses()
+    }
+
+    class Admin {
+        +adminId: int
+        +approvStudent()
+    }
+
+    User <|-- Student
+    User <|-- Admin
+```
