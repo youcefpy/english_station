@@ -53,37 +53,89 @@ sequenceDiagram
     end
 ```
 ---
-### Sequence diagram Admin create class Group like (1st)
+### Sequence diagram Admin create academicLevel Group like (1st, 2nd, 3rd)
 ```mermaid
+sequenceDiagram
+    actor Admin
+    participant App
+    participant DB
 
+    Admin->>App:Create AcadimicLevel()
+    App->>Admin:FormAcadimicLevel()
+    Admin->>App:Fill form()
+    App->>App:validate data
+    App->>DB:Save()
 ```
 ---
-### Sequence diagram admin create cours 
+### Sequence diagram admin create streams (Scientific, Leterary, Mathematic, Technical math)
 ```mermaid
+sequenceDiagram
+    actor Admin
+    participant App
+    participant DB
 
+    Admin->>App:Create CreateSteam()
+    App->>Admin:FormStream()
+    Admin->>App:Fill form()
+    App->>App:validate data
+    App->>DB:Save()
+```
+
+
+---
+### Sequence diagram Create Unit
+```mermaid
+sequenceDiagram
+    actor Admin
+    participant App
+    participant DB
+
+    Admin->>App:Create CreateUnit()
+    App->>Admin:FormUnit()
+    Admin->>App:Fill form()
+    App->>App:validate data
+    App->>DB:Save()
+```
+---
+### Sequence diagram admin create cours
+```mermaid
+sequenceDiagram
+    actor Admin
+    participant App
+    participant DB
+    
+    Admin->>App:Create CreateCours()
+    App->>Admin:FormCours()
+    Admin->>App:Fill form()
+    App->>App:validate data
+    App->>DB:Save()
+```
+---
+### Sequence diagram admin affect cours to Unit
+```mermaid
+sequenceDiagram
+    actor Admin
+    participant App
+    participant DB
+
+    Admin->>App:AffectCourseToUnit()
+    App->>DB:Save()
 ```
 
 ---
-### Sequence diagram admin create chapter
+### Sequence diagram admin affect Unit to AcadimicLevel
 ```mermaid
+sequenceDiagram
+    actor Admin
+    participant App
+    participant DB
 
-```
----
-### Sequence diagram admin affect cour to chapter
-
-```mermaid
-
-```
-
-### Sequence diagram admin affect cours to class
-```mermaid
-
+    Admin->>App:AffectUnitToAcadimicLevel()
+    App->>DB:Save()
 ```
 
 ---
-## Class diagram
-
-# Class Diagram
+# Class diagram
 
 ```mermaid
 classDiagram
@@ -126,7 +178,7 @@ classDiagram
         THIRD_YEAR
     }
 
-    class stream {
+    class Stream {
         +streamId: int
         +name: string
         +description: string
@@ -145,7 +197,19 @@ classDiagram
         +format: string
     }
 
+    class AcademicLevelStream{
+        +idAcadimicLevel: int
+        +idStream: int
+        +idStudent: int
+    }
 
+
+    class Unit{
+        +idUnit: int
+        +name: string
+        +description: string
+        +stream: Stream
+    }
 
     class Exam {
         +examId: int
@@ -156,7 +220,7 @@ classDiagram
         +createQuestion()
         +evaluateExam()
     }
-
+    
     class Question {
         +questionId: int
         +examId: int
@@ -169,15 +233,21 @@ classDiagram
     User <|-- Student
     User <|-- Admin
     
-    stream "1" -- "0..*" Student : enrolls
-    stream "1" -- "0..*" Course : contains
-    AcademicLevel "1" -- "0..*" stream : has
+    Unit "1" -- "1..*" Course : contains
+    AcademicLevel "1" -- "1..*" Stream : has
     
-    Course "1" -- "0..*" Exam : has
-    Exam "1" -- "0..*" Question : contains
+    Course "1" -- "1..*" Exam : has
+    Exam "1" -- "1..*" Question : contains
     
-    Admin "1" -- "0..*" Course : creates
-    Admin "1" -- "0..*" Exam : creates
+    Admin "1" -- "1..*" Course : creates
+    Admin "1" -- "1..*" Exam : creates
     
-    Student "0..*" -- "0..*" Course : takes
+    Student "1..*" -- "1..*" Course : takes
+
+    Stream "1" -- "1..*" Unit : contains
+
+    Stream -- AcademicLevelStream
+    AcademicLevel -- AcademicLevelStream
+    AcademicLevelStream "1" -- "1..*" Student: contains
+
 ```
