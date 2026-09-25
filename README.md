@@ -7,7 +7,7 @@
 sequenceDiagram
     actor Student
     participant App
-    participant Admin
+    actor Admin
     participant DB
     
     Student->>App: Click Register()
