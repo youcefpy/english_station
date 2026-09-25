@@ -1,13 +1,13 @@
 # English Station
 
-
+---
 ## Sequence Diagrams
 ### Sequence diagram for Student Registration
 ```mermaid
 sequenceDiagram
     actor Student
     participant App
-    participant Admin
+    actor Admin
     participant DB
     
     Student->>App: Click Register()
@@ -33,7 +33,7 @@ sequenceDiagram
         App-->>Student: Registration not allowed
     end
 ```
-
+---
 ### Sequence diagram Login Student
 
 ```mermaid
@@ -52,20 +52,35 @@ sequenceDiagram
         App-->>Student:email or Password incorrect. please try again with correct creadentials
     end
 ```
-
+---
 ### Sequence diagram Admin create class Group like (1st)
-we have 3 years in the heigh school 1st year, 2nd year and 3rd year 
-for each year we have a speciality like luangues, scientific, mathematics, technique mathematics and so on 
+```mermaid
 
+```
+---
 ### Sequence diagram admin create cours 
+```mermaid
 
+```
+
+---
 ### Sequence diagram admin create chapter
+```mermaid
 
+```
+---
 ### Sequence diagram admin affect cour to chapter
 
+```mermaid
+
+```
+
 ### Sequence diagram admin affect cours to class
+```mermaid
 
+```
 
+---
 ## Class diagram
 
 # Class Diagram
@@ -85,7 +100,7 @@ classDiagram
 
     class Student {
         +studentId: int
-        +specialityId: int
+        +streamId: int
         +accessToken: string
         +viewCourses()
         +takExam()
@@ -111,8 +126,8 @@ classDiagram
         THIRD_YEAR
     }
 
-    class Speciality {
-        +specialityId: int
+    class stream {
+        +streamId: int
         +name: string
         +description: string
         +level: AcademicLevel
@@ -125,7 +140,7 @@ classDiagram
         +courseId: int
         +title: string
         +description: string
-        +specialityId: int
+        +streamId: int
         +createdBy: int
         +format: string
     }
@@ -154,9 +169,9 @@ classDiagram
     User <|-- Student
     User <|-- Admin
     
-    Speciality "1" -- "0..*" Student : enrolls
-    Speciality "1" -- "0..*" Course : contains
-    AcademicLevel "1" -- "0..*" Speciality : has
+    stream "1" -- "0..*" Student : enrolls
+    stream "1" -- "0..*" Course : contains
+    AcademicLevel "1" -- "0..*" stream : has
     
     Course "1" -- "0..*" Exam : has
     Exam "1" -- "0..*" Question : contains
