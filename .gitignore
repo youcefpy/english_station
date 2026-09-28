@@ -9,3 +9,6 @@ wheels/
 # Virtual environments
 .venv
 .env
+migrations
+uv.lock
+db.sqlite3

@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-tunor_5f%*qrc8-8f0pzd_20@r(a9!(&23kt@#tro9(lt=y2as
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -126,3 +126,5 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+AUTH_USER_MODEL = "app_english.MyUser"
