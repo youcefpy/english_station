@@ -17,12 +17,23 @@ class AcadimicLevel(models.IntegerChoices):
     THIRD_LEVEL = 3
 
 class Stream(models.Model):
-    ...
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    level = models.IntegerField(choices=AcadimicLevel.choices)
+
+    def __str__(self):
+        return f"Stream: {self.name}, {self.description}, {self.level}"
 class Unit(models.Model):
-    ...
+    name=  models.CharField(max_length=255)
+    description = models.TextField()
 
 class Cours(models.Model):
-    ...
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    unit = models.ForeignKey(Unit,on_delete=models.CASCADE)
+    stream = models.ForeignKey(stream, on_delete=models.CASCADE)
+    format = models.CharField(max_length=255,default='.pdf')
+
 class Exam(models.Model):
     ...
 
