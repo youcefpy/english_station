@@ -12,3 +12,4 @@ wheels/
 migrations
 uv.lock
 db.sqlite3
+lesson
