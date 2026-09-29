@@ -22,10 +22,14 @@ class Stream(models.Model):
     level = models.IntegerField(choices=AcadimicLevel.choices)
 
     def __str__(self):
-        return f"Stream: {self.name}, {self.description}, {self.level}"
+        return f"{self.name}"
 class Unit(models.Model):
     name=  models.CharField(max_length=255)
     description = models.TextField()
+
+    def __str__(self):
+
+        return f"{self.name}"
 
 class Cours(models.Model):
     title = models.CharField(max_length=255)
@@ -33,6 +37,9 @@ class Cours(models.Model):
     unit = models.ForeignKey(Unit,on_delete=models.CASCADE)
     stream = models.ForeignKey(Stream, on_delete=models.CASCADE)
     format = models.CharField(max_length=255,default='.pdf')
+    
+    def __str__(self):
+        return f"{self.stream.name}: {self.unit.name} : {self.title}"
 
 class Exam(models.Model):
     ...
