@@ -36,7 +36,7 @@ class Cours(models.Model):
     description = models.TextField()
     unit = models.ForeignKey(Unit,on_delete=models.CASCADE)
     stream = models.ForeignKey(Stream, on_delete=models.CASCADE)
-    format = models.CharField(max_length=255,default='.pdf')
+    lesson = models.FileField(upload_to='lesson/')
     
     def __str__(self):
         return f"{self.stream.name}: {self.unit.name} : {self.title}"
