@@ -1,5 +1,6 @@
 from django.contrib import admin
-from models import Cours, Stream, Unit
+
+from .models import Cours, Stream, Unit
 
 # Register your models here.
 
