@@ -31,7 +31,7 @@ class Cours(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     unit = models.ForeignKey(Unit,on_delete=models.CASCADE)
-    stream = models.ForeignKey(stream, on_delete=models.CASCADE)
+    stream = models.ForeignKey(Stream, on_delete=models.CASCADE)
     format = models.CharField(max_length=255,default='.pdf')
 
 class Exam(models.Model):
