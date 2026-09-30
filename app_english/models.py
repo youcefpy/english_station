@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
@@ -42,7 +43,12 @@ class Cours(models.Model):
         return f"{self.stream.name}: {self.unit.name} : {self.title}"
 
 class Exam(models.Model):
-    ...
+    title = models.CharField(max_length=255)
+    cours = models.ForeignKey(Cours,on_delete=models.CASCADE)
+    passing_scrore = models.IntegerField(
+        default=0,
+        validators=[MinValueValidator(1), MaxValueValidator(10)]
+        )
 
 class Question(models.Model):
     ...
