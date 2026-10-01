@@ -45,7 +45,7 @@ class Cours(models.Model):
 
 class Exam(models.Model):
     title = models.CharField(max_length=255)
-    cours = models.ForeignKey(Cours,on_delete=models.CASCADE)
+    cours = models.OneToOneField(Cours,on_delete=models.CASCADE)
     passing_scrore = models.IntegerField(
         default=0,
         validators=[MinValueValidator(1), MaxValueValidator(10)]
