@@ -51,6 +51,9 @@ class Exam(models.Model):
         validators=[MinValueValidator(1), MaxValueValidator(10)]
         )
 
+    def __str__(self):
+        return f"{self.title}"
+
 class Question(models.Model):
     exam = models.ForeignKey(Exam, related_name="questions", on_delete=models.CASCADE)
     text = models.CharField(max_length=255)
