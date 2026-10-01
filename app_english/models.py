@@ -51,4 +51,35 @@ class Exam(models.Model):
         )
 
 class Question(models.Model):
-    ...
+    exam = models.ForeignKey(Exam, related_name="questions", on_delete=models.CASCADE)
+    text = models.CharField(max_length=255)
+    allow_multiple = models.BooleanField(
+        default=False, help_text="Tick to let users pick several options"
+    )
+    def __str__(self):
+        return self.text
+class Option(models.Model):
+    question = models.ForeignKey(Question, related_name="options", on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    score = models.IntegerField(
+        default=0,
+        help_text="Points earned if selected. 0 = wrong answer (use a negative value to penalise)",
+    )
+    class Meta:
+        unique_together = ("question", "name")
+
+    @property
+    def is_correct(self):
+        return self.score > 0
+
+    def __str__(self):
+        return self.name
+class Answer(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    selected = models.ManyToManyField(Option)  # holds 1 item or several
+    score = models.IntegerField(default=0)  # saved at submission time
+
+    def compute_score(self):
+        total = self.selected.aggregate(total=models.Sum("score"))["total"] or 0
+        return max(total, 0)  # remove max() if you allow negative totals
