@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-
+from .utils import lesson_upload_path
 
 # Create your models here.
 class MyUser(AbstractUser):
@@ -17,6 +17,7 @@ class AcadimicLevel(models.IntegerChoices):
     FIRST_YEAR = 1
     SECOND_YEAR = 2
     THIRD_LEVEL = 3
+
 
 class Stream(models.Model):
     name = models.CharField(max_length=255)
@@ -34,11 +35,20 @@ class Unit(models.Model):
         return f"{self.name}"
 
 class Cours(models.Model):
+    class FormatCours(models.TextChoices):
+        WORD = "WORD", ".docx"
+        PDF = "PDF", ".pdf"
+        TXT = "TXT", ".txt"
+        MP4 = "MP4", ".mp4"
+        WEBM = "WEBM", ".webm"
+        MOV = "MOV", ".mov"
+
     title = models.CharField(max_length=255)
     description = models.TextField()
     unit = models.ForeignKey(Unit,on_delete=models.CASCADE)
     stream = models.ForeignKey(Stream, on_delete=models.CASCADE)
-    lesson = models.FileField(upload_to='lesson/', default="")
+    format_cours = models.CharField(choices=FormatCours,default=FormatCours.PDF)
+    lesson = models.FileField(upload_to=lesson_upload_path,blank=True)
     
     def __str__(self):
         return f"{self.stream.name}: {self.unit.name} : {self.title}"
