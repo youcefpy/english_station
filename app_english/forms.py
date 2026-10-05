@@ -1,5 +1,6 @@
 from django import forms
-from models import Admin, Cours, Exam, Question, Stream, Student, Unit
+
+from .models import Admin, Cours, Exam, Question, Stream, Student, Unit
 
 
 class AdminForm(forms.ModelForm):
