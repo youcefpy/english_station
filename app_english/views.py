@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
+from app_english.models import Cours
+
 from .forms import CoursForm
 
 # Create your views here.
@@ -13,7 +15,7 @@ def index(request):
     return render(request,'index.html',context=context)
 
 
-#login required
+#login required for student and admin
 def form_cours(request):
     if request.method == "POST":
         form = CoursForm(request.POST)
@@ -22,8 +24,10 @@ def form_cours(request):
 
             return redirect('index')
     else : 
+        all_cours = Cours.objects.all() 
         form = CoursForm()
     context = { 
+        'all_cours' : all_cours,
         'form': form
         
     }
