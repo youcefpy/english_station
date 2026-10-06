@@ -1,3 +1,5 @@
+from ssl import Options
+
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
@@ -96,15 +98,30 @@ def exam_view(request):
 def question_view(request):
     if request.method == "POST":
         form = forms.QuestionForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return render("index")
+    else:
+        all_questions = Question.objects.all() # this is not correct we need to filter exams by stream and by acadimic level
+        form = forms.QuestionForm()
+    context = {
+        'form' : form,
+        'all_questions' : all_questions
+    }
+    return render(request,"question.html",context)
+
+def options_view(request):
+    if request.method == "POST":
+        form = forms.OptionsForm(request.POST)
 
         if form.is_valid():
             form.save()
         return render("index")
     else:
-        all_exams = Question.objects.all() # this is not correct we need to filter exams by stream and by acadimic level
-        form = forms.QuestionForm()
+        all_options = Options.objects.all() # this is not correct we need to filter exams by stream and by acadimic level
+        form = forms.OptionsForm()
     context = {
         'form' : form,
-        'all_units' : all_exams
+        'all_options' : all_options
     }
     return render(request,"question.html",context)
