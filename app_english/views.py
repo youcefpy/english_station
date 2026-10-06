@@ -2,9 +2,18 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 import app_english.forms as forms
-from app_english.models import Cours, Stream, Unit
+from app_english.models import Cours, Exam, Stream, Unit
 
 # Create your views here.
+
+
+def admin_view(request):
+    ...
+
+    
+def student_view(request):
+    ...
+
 
 
 def index(request):
@@ -65,10 +74,18 @@ def unit_view(request):
     }
     return render(request,"unit.html",context)
 
+def exam_view(request):
+    if request.method == "POST":
+        form = forms.ExamForm(request.POST)
 
-def admin_view(request):
-    ...
-
-    
-def student_view(request):
-    ...
+        if form.is_valid():
+            form.save()
+        return render("index")
+    else:
+        all_units = Exam.objects.all()
+        form = forms.ExamForm()
+    context = {
+        'form' : form,
+        'all_units' : all_units
+    }
+    return render(request,"unit.html",context)
