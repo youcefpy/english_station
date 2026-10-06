@@ -13,7 +13,7 @@ class StudentForm(forms.ModelForm):
         model=Student
         fields = '__all__'
 
-class StramForm(forms.ModelForm):
+class StreamForm(forms.ModelForm):
     class Meta: 
         model = Stream
         fields = '__all__'

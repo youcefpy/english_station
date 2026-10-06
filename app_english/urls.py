@@ -21,5 +21,5 @@ import app_english.views as views  # noqa: PLR0402
 
 urlpatterns = [
     path('', views.index, name="index"),
-    path('cours/',views.form_cours, name="cours")
+    path('cours/',views.cours_view, name="cours")
 ]
