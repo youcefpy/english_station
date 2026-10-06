@@ -64,3 +64,11 @@ def unit_view(request):
         'all_units' : all_units
     }
     return render(request,"unit.html",context)
+
+
+def admin_view(request):
+    ...
+
+    
+def student_view(request):
+    ...
