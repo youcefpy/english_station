@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 import app_english.forms as forms
-from app_english.models import Cours, Exam, Stream, Unit
+from app_english.models import Cours, Exam, Question, Stream, Unit
 
 # Create your views here.
 
@@ -75,6 +75,8 @@ def unit_view(request):
     return render(request,"unit.html",context)
 
 def exam_view(request):
+    """
+    """
     if request.method == "POST":
         form = forms.ExamForm(request.POST)
 
@@ -82,10 +84,27 @@ def exam_view(request):
             form.save()
         return render("index")
     else:
-        all_units = Exam.objects.all()
+        all_exams = Exam.objects.all() # this is not correct we need to filter exams by stream and by acadimic level
         form = forms.ExamForm()
     context = {
         'form' : form,
-        'all_units' : all_units
+        'all_exams' : all_exams # same here we dont need to get all exams 
+
     }
-    return render(request,"unit.html",context)
+    return render(request,"exam.html",context)
+
+def question_view(request):
+    if request.method == "POST":
+        form = forms.QuestionForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+        return render("index")
+    else:
+        all_exams = Question.objects.all() # this is not correct we need to filter exams by stream and by acadimic level
+        form = forms.QuestionForm()
+    context = {
+        'form' : form,
+        'all_units' : all_exams
+    }
+    return render(request,"question.html",context)
