@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import redirect, render
 
 import app_english.forms as forms
-from app_english.models import Cours, Stream
+from app_english.models import Cours, Stream, Unit
 
 # Create your views here.
 
@@ -48,3 +48,19 @@ def stream_view(request):
     }
 
     return render(request,'stream.html',context)
+
+def unit_view(request):
+    if request.method == "POST":
+        form = forms.UnitForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+        return render("index")
+    else:
+        all_units = Unit.objects.all()
+        form = forms.UnitForm()
+    context = {
+        'form' : form,
+        'all_units' : all_units
+    }
+    return render(request,"unit.html",context)
