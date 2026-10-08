@@ -27,3 +27,14 @@ class CoursTestCase(TestCase):
         self.assertEqual(self.cours.title, "Introduction to Grammar")
         self.assertEqual(self.cours.unit, self.unit)
         self.assertEqual(self.cours.stream, self.stream)
+
+    def test_stream_is_created(self):
+        stream = Stream.objects.get(pk=self.stream.pk)
+        self.assertEqual(stream.name, "English")
+        self.assertEqual(stream.description, "English stream")
+        self.assertEqual(stream.level, 1)
+
+    def test_unit_is_created(self):
+        unit = Unit.objects.get(pk=self.unit.pk)
+        self.assertEqual(unit.name, "Grammar")
+        self.assertEqual(unit.description, "Grammar lessons")
