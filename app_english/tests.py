@@ -23,6 +23,10 @@ class CoursTestCase(TestCase):
             stream=self.stream,
         )
 
+    def test_get_all_cours(self):
+        cours = Cours.objects.all()
+        self.assertEqual(len(cours),1)
+
     def test_cours_is_created(self):
         cours = Cours.objects.get(pk=self.cours.pk)
         self.assertEqual(cours.title, "Introduction to Grammar")
@@ -95,7 +99,10 @@ class ExamTestCase(TestCase):
             title="Grammar Exam",
             cours=cours,
         )
-
+    def test_exam_get(self):
+        exams = Exam.objects.all()
+        self.assertEqual(len(exams),1)
+    
     def test_exam_is_created(self):
         exam = Exam.objects.get(pk=self.exam.pk)
         self.assertEqual(exam.title, "Grammar Exam")
