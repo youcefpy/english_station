@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from app_english.models import Cours, Stream, Unit
+from app_english.models import Cours, Exam, Stream, Unit
 
 # Create your tests here.
 
@@ -38,3 +38,31 @@ class CoursTestCase(TestCase):
         unit = Unit.objects.get(pk=self.unit.pk)
         self.assertEqual(unit.name, "Grammar")
         self.assertEqual(unit.description, "Grammar lessons")
+
+
+class ExamTestCase(TestCase):
+    def setUp(self):
+        stream = Stream.objects.create(
+            name="English",
+            description="English stream",
+            level=1,
+        )
+        unit = Unit.objects.create(
+            name="Grammar",
+            description="Grammar lessons",
+        )
+        cours = Cours.objects.create(
+            title="Introduction to Grammar",
+            description="An introductory grammar lesson",
+            unit=unit,
+            stream=stream,
+        )
+        self.exam = Exam.objects.create(
+            title="Grammar Exam",
+            cours=cours,
+        )
+
+    def test_exam_is_created(self):
+        exam = Exam.objects.get(pk=self.exam.pk)
+        self.assertEqual(exam.title, "Grammar Exam")
+        self.assertEqual(exam.cours.title, "Introduction to Grammar")
