@@ -20,6 +20,7 @@ from django.urls import path
 import app_english.views as views  # noqa: PLR0402
 
 urlpatterns = [
+    path('check-info-student/',views.check_information_student_view,name='check-student-sigup'),
     path('', views.index, name="index"),
     path('cours/',views.cours_view, name="cours")
 ]

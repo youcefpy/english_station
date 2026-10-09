@@ -8,14 +8,12 @@ from app_english.models import Cours, Exam, Question, Stream, Unit
 
 # Create your views here.
 
+def check_information_student_view(request):
 
-def admin_view(request):
-    ...
-
-    
-def student_view(request):
-    ...
-
+    context = {
+        
+    }
+    return render(request,'checking_signup.html',context)
 
 
 def index(request):

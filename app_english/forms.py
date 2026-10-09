@@ -1,17 +1,7 @@
 from django import forms
 
-from .models import Admin, Cours, Exam, Question, Stream, Student, Unit
+from .models import Cours, Exam, Question, Stream, Unit
 
-
-class AdminForm(forms.ModelForm):
-    class Meta:
-        model=Admin
-        fields = '__all__'
-
-class StudentForm(forms.ModelForm):
-    class Meta:
-        model=Student
-        fields = '__all__'
 
 class StreamForm(forms.ModelForm):
     class Meta: 

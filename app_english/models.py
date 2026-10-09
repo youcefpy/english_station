@@ -1,17 +1,11 @@
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+
 from .utils import lesson_upload_path
 
 # Create your models here.
-class MyUser(AbstractUser):
-    pass
 
-class Admin(MyUser):
-    pass
-class Student(MyUser):
-    pass
 
 class AcadimicLevel(models.IntegerChoices):
     FIRST_YEAR = 1
