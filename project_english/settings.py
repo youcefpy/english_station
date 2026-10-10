@@ -152,3 +152,6 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+LOGIN_REDIRECT_URL = 'index'
+ACCOUNT_SIGNUP_REDIRECT_URL = 'check-student-sigup'
