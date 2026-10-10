@@ -1,6 +1,10 @@
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import (
+    FileExtensionValidator,
+    MaxValueValidator,
+    MinValueValidator,
+)
 from django.db import models
 
 from .utils import lesson_upload_path
@@ -78,7 +82,13 @@ class Cours(models.Model):
     description = models.TextField()
     unit = models.ForeignKey(Unit,on_delete=models.CASCADE)
     format_cours = models.CharField(choices=FormatCours,default=FormatCours.PDF)
-    lesson = models.FileField(upload_to=lesson_upload_path,blank=True)
+    lesson = models.FileField(upload_to=lesson_upload_path,
+        validators=[
+            FileExtensionValidator(
+                allowed_extensions=['pdf', 'doc', 'docx', 'txt', 'mp4', 'mkv', 'avi', 'mov']
+            )
+        ]
+    )
 
     def __str__(self):
         return f"{self.stream.name}: {self.unit.name} : {self.title}"
