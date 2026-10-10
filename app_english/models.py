@@ -10,7 +10,6 @@ from .utils import lesson_upload_path
 
 # Create your models here.
 
-
 class AcadimicLevelChoices(models.IntegerChoices):
     FIRST_YEAR = 1
     SECOND_YEAR = 2

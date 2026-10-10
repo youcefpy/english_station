@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from .forms import UnitForm
 from .models import Answer, Cours, Exam, Option, Question, Stream, Unit
 
 # Register your models here.
@@ -12,5 +13,11 @@ class AllFieldsAdmin(admin.ModelAdmin):
         super().__init__(model, admin_site)
 
 
-for model in (Unit, Stream, Cours, Exam, Question, Option, Answer):
+class UnitAdmin(AllFieldsAdmin):
+    form = UnitForm
+
+
+admin.site.register(Unit, UnitAdmin)
+
+for model in (Stream, Cours, Exam, Question, Option, Answer):
     admin.site.register(model, AllFieldsAdmin)
