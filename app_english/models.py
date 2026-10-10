@@ -89,7 +89,6 @@ class Cours(models.Model):
             )
         ]
     )
-
     def __str__(self):
         return f"{self.stream.name}: {self.unit.name} : {self.title}"
 class Exam(models.Model):
