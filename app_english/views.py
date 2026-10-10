@@ -1,29 +1,30 @@
 from ssl import Options
 
-from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
-import app_english.forms as forms
+from app_english import forms
 from app_english.models import Cours, Exam, Question, Stream, Unit
 
-# Create your views here.
 
+# Create your views here.
 def check_information_student_view(request):
 
     context = {
-        
+
     }
     return render(request,'checking_signup.html',context)
 
-
+@login_required
 def index(request):
     context = {
-        'admin': 'Bouchra'
+
     }
     return render(request,'index.html',context=context)
 
 
 #login required for student and admin
+@login_required
 def cours_view(request):
     if request.method == "POST":
         form = forms.CoursForm(request.POST)
@@ -41,7 +42,7 @@ def cours_view(request):
     }
     return render(request,'cours.html',context=context)
 
-
+@login_required
 def stream_view(request):
     if request.method == "POST":
         form = forms.StreamForm(request.POST)
@@ -58,6 +59,7 @@ def stream_view(request):
 
     return render(request,'stream.html',context)
 
+@login_required
 def unit_view(request):
     if request.method == "POST":
         form = forms.UnitForm(request.POST)
@@ -74,6 +76,7 @@ def unit_view(request):
     }
     return render(request,"unit.html",context)
 
+@login_required
 def exam_view(request):
     """
     """
@@ -93,6 +96,7 @@ def exam_view(request):
     }
     return render(request,"exam.html",context)
 
+@login_required
 def question_view(request):
     if request.method == "POST":
         form = forms.QuestionForm(request.POST)
@@ -107,7 +111,7 @@ def question_view(request):
         'all_questions' : all_questions
     }
     return render(request,"question.html",context)
-
+@login_required
 def options_view(request):
     if request.method == "POST":
         form = forms.OptionsForm(request.POST)
