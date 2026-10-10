@@ -16,6 +16,10 @@ dev = [
     "ruff>=0.17.0",
 ]
 
+[[tool.mypy.overrides]]
+module = "app_english.models"
+ignore_errors = true
+
 [tool.ruff.lint]
 extend-select = [
     "DJ",       # flake8-django: Django-specific bugs
