@@ -32,18 +32,17 @@ def cours_view(request,stream=None):
             form.save()
 
             return redirect('index')
-    else : 
+    else :
         #for admin
         if request.user.is_authenticated and request.user.issuperuser:
             all_cours = Cours.objects.all()
         elif request.user.is_authenticated:
             all_cours = Cours.objects.filter(stream=stream)
-            
+
         form = forms.CoursForm()
-    context = { 
+    context = {
         'all_cours' : all_cours,
         'form': form
-        
     }
     return render(request,'cours.html',context=context)
 
@@ -54,7 +53,7 @@ def stream_view(request):
         if form.is_valid():
             form.save()
         return redirect('index')
-    else : 
+    else :
         all_streams = Stream.objects.all()
         form = forms.Stream()
     context = {
@@ -83,8 +82,6 @@ def unit_view(request):
 
 @login_required
 def exam_view(request):
-    """
-    """
     if request.method == "POST":
         form = forms.ExamForm(request.POST)
 
@@ -92,11 +89,12 @@ def exam_view(request):
             form.save()
         return render("index")
     else:
-        all_exams = Exam.objects.all() # this is not correct we need to filter exams by stream and by acadimic level
+        all_exams = Exam.objects.all() # this is not correct we need to filter
+        #exams by stream and by acadimic level
         form = forms.ExamForm()
     context = {
         'form' : form,
-        'all_exams' : all_exams # same here we dont need to get all exams 
+        'all_exams' : all_exams # same here we dont need to get all exams
 
     }
     return render(request,"exam.html",context)
@@ -109,7 +107,8 @@ def question_view(request):
             form.save()
         return render("index")
     else:
-        all_questions = Question.objects.all() # this is not correct we need to filter exams by stream and by acadimic level
+        all_questions = Question.objects.all() # this is not correct we need to filter
+        #exams by stream and by acadimic level
         form = forms.QuestionForm()
     context = {
         'form' : form,
@@ -125,7 +124,8 @@ def options_view(request):
             form.save()
         return render("index")
     else:
-        all_options = Options.objects.all() # this is not correct we need to filter exams by stream and by acadimic level
+        all_options = Options.objects.all() # this is not correct we need to filter
+        #exams by stream and by acadimic level
         form = forms.OptionsForm()
     context = {
         'form' : form,

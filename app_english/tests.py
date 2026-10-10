@@ -102,7 +102,7 @@ class ExamTestCase(TestCase):
     def test_exam_get(self):
         exams = Exam.objects.all()
         self.assertEqual(len(exams),1)
-    
+
     def test_exam_is_created(self):
         exam = Exam.objects.get(pk=self.exam.pk)
         self.assertEqual(exam.title, "Grammar Exam")
