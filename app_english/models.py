@@ -45,10 +45,6 @@ class Stream(models.Model):
         unique=True,
     )
     level = models.IntegerField(choices=AcadimicLevelChoices)
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=["name", "level"], name="unique_stream_per_level")
-        ]
 
     def __str__(self):
         return f"{self.level}-{self.name}"
@@ -58,14 +54,9 @@ class Unit(models.Model):
     level = models.IntegerField(choices=AcadimicLevelChoices)
     stream = models.ForeignKey(Stream,on_delete=models.CASCADE)
     description = models.TextField()
-
     class Meta:
-        ordering  = ["number"]
+        ordering  = ["number"]  # noqa: RUF012
 
-    def clean(self):
-            if self.stream_id and self.level_id and self.stream.level_id != self.level_id:
-                raise ValidationError({"stream": "This stream does not belong to the selected level."})
-    
     def __str__(self):
         return f"{self.name}"
 
@@ -85,7 +76,8 @@ class Cours(models.Model):
     lesson = models.FileField(upload_to=lesson_upload_path,
         validators=[
             FileExtensionValidator(
-                allowed_extensions=['pdf', 'doc', 'docx', 'txt', 'mp4', 'mkv', 'avi', 'mov']
+                allowed_extensions=['pdf', 'doc', 'docx', 'txt',
+                                    'mp4', 'mkv', 'avi', 'mov']
             )
         ]
     )
@@ -111,7 +103,8 @@ class Question(models.Model):
     def __str__(self):
         return self.text
 class Option(models.Model):
-    question = models.ForeignKey(Question, related_name="options", on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, related_name="options",
+                                 on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     score = models.IntegerField(
         default=0,
@@ -123,7 +116,6 @@ class Option(models.Model):
     @property
     def is_correct(self):
         return self.score > 0
-
     def __str__(self):
         return self.name
 class Answer(models.Model):
