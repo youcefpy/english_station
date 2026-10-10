@@ -69,6 +69,8 @@ class Cours(models.Model):
 
     title = models.CharField(max_length=255)
     description = models.TextField()
+    level = models.IntegerField(choices=AcadimicLevelChoices)
+    stream = models.ForeignKey(Stream,on_delete=models.CASCADE)
     unit = models.ForeignKey(Unit,on_delete=models.CASCADE)
     format_cours = models.CharField(choices=FormatCours,default=FormatCours.PDF)
     lesson = models.FileField(upload_to=lesson_upload_path,
