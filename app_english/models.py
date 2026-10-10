@@ -47,7 +47,7 @@ class Stream(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.level}-{self.name}"
 class Unit(models.Model):
     number = models.PositiveIntegerField(unique=False)
     name=  models.CharField(max_length=255)
