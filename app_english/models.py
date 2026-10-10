@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -7,25 +8,61 @@ from .utils import lesson_upload_path
 # Create your models here.
 
 
-class AcadimicLevel(models.IntegerChoices):
+class AcadimicLevelChoices(models.IntegerChoices):
     FIRST_YEAR = 1
     SECOND_YEAR = 2
     THIRD_LEVEL = 3
 
+class StreamNameChoices(models.TextChoices):
+    # Common core (first year)
+    COMMON_CORE_SCIENCE_TECH = "common_core_st", "Tronc commun Sciences et Technologie"
+    COMMON_CORE_LETTERS = "common_core_letters", "Tronc commun Lettres"
+
+    # Sciences et Technologie branch
+    EXPERIMENTAL_SCIENCES = "experimental_sciences", "Sciences expérimentales"
+    MATHEMATICS = "mathematics", "Mathématiques"
+    TECHNICAL_MATHEMATICS = "technical_mathematics", "Technique mathématique"
+    MANAGEMENT_ECONOMICS = "management_economics", "Gestion et économie"
+
+    # Technique mathématique options
+    MECHANICAL_ENGINEERING = "mechanical_engineering", "Génie mécanique"
+    ELECTRICAL_ENGINEERING = "electrical_engineering", "Génie électrique"
+    CIVIL_ENGINEERING = "civil_engineering", "Génie civil"
+    PROCESS_ENGINEERING = "process_engineering", "Génie des procédés"
+
+    # Lettres branch
+    LITERATURE_PHILOSOPHY = "literature_philosophy", "Lettres et philosophie"
+    FOREIGN_LANGUAGES = "foreign_languages", "Langues étrangères"
 
 class Stream(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
-    level = models.IntegerField(choices=AcadimicLevel.choices)
+    name = models.CharField(
+        max_length=50,
+        choices=StreamNameChoices.choices,
+        unique=True,
+    )
+    level = models.IntegerField(choices=AcadimicLevelChoices)
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["name", "level"], name="unique_stream_per_level")
+        ]
 
     def __str__(self):
         return f"{self.name}"
 class Unit(models.Model):
+    number = models.PositiveIntegerField(unique=False)
     name=  models.CharField(max_length=255)
+    level = models.IntegerField(choices=AcadimicLevelChoices)
+    stream = models.ForeignKey(Stream,on_delete=models.CASCADE)
     description = models.TextField()
 
-    def __str__(self):
+    class Meta:
+        ordering  = ["number"]
 
+    def clean(self):
+            if self.stream_id and self.level_id and self.stream.level_id != self.level_id:
+                raise ValidationError({"stream": "This stream does not belong to the selected level."})
+    
+    def __str__(self):
         return f"{self.name}"
 
 class Cours(models.Model):
@@ -40,13 +77,11 @@ class Cours(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     unit = models.ForeignKey(Unit,on_delete=models.CASCADE)
-    stream = models.ForeignKey(Stream, on_delete=models.CASCADE)
     format_cours = models.CharField(choices=FormatCours,default=FormatCours.PDF)
     lesson = models.FileField(upload_to=lesson_upload_path,blank=True)
-    
+
     def __str__(self):
         return f"{self.stream.name}: {self.unit.name} : {self.title}"
-
 class Exam(models.Model):
     title = models.CharField(max_length=255)
     cours = models.OneToOneField(Cours,on_delete=models.CASCADE)

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Cours, Stream, Unit, Exam,Answer, Option, Question
+from .models import Answer, Cours, Exam, Option, Question, Stream, Unit
 
 # Register your models here.
 
