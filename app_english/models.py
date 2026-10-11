@@ -4,6 +4,7 @@ from django.core.validators import (
     MaxValueValidator,
     MinValueValidator,
 )
+from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 
 from .utils import lesson_upload_path
@@ -35,6 +36,28 @@ class StreamNameChoices(models.TextChoices):
     # Lettres branch
     LITERATURE_PHILOSOPHY = "literature_philosophy", "Lettres et philosophie"
     FOREIGN_LANGUAGES = "foreign_languages", "Langues étrangères"
+
+class User(AbstractBaseUser):
+    pass
+
+class Student(User):
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    level = models.IntegerField(choices=AcadimicLevelChoices)
+    stream = models.CharField(choices=StreamNameChoices)
+class Admin(User):
+
+
+    def generate_token(self):
+        """This function generate
+        token to new user and send the generated token to the student it will
+        send the email to the student with the url and redirect to 
+        password and confirm password
+        """
+        print("Generate token for and send " \
+        "email with link and when link " \
+        "clicked it will redicrect to set password page")
 
 class Stream(models.Model):
     name = models.CharField(
