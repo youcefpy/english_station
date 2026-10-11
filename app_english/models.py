@@ -52,7 +52,7 @@ class Admin(User):
     def generate_token(self):
         """This function generate
         token to new user and send the generated token to the student it will
-        send the email to the student with the url and redirect to 
+        send the email to the student with the url and redirect to
         password and confirm password
         """
         print("Generate token for and send " \
