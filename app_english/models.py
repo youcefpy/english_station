@@ -4,7 +4,7 @@ from django.core.validators import (
     MaxValueValidator,
     MinValueValidator,
 )
-from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from .utils import lesson_upload_path
@@ -37,13 +37,10 @@ class StreamNameChoices(models.TextChoices):
     LITERATURE_PHILOSOPHY = "literature_philosophy", "Lettres et philosophie"
     FOREIGN_LANGUAGES = "foreign_languages", "Langues étrangères"
 
-class User(AbstractBaseUser):
+class User(AbstractUser):
     pass
 
 class Student(User):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField()
     level = models.IntegerField(choices=AcadimicLevelChoices)
     stream = models.CharField(choices=StreamNameChoices)
 class Admin(User):
