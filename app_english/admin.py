@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .forms import CoursForm, UnitForm
-from .models import Answer, Cours, Exam, Option, Question, Stream, Unit, User
+from .models import Answer, Cours, Exam, Option, Question, Stream, Unit
 
 # Register your models here.
 
@@ -24,5 +24,5 @@ class CoursAdmin(AllFieldsAdmin):
 admin.site.register(Unit, UnitAdmin)
 admin.site.register(Cours, CoursAdmin)
 
-for model in (User,Stream, Exam, Question, Option, Answer):
+for model in (Stream, Exam, Question, Option, Answer):
     admin.site.register(model, AllFieldsAdmin)

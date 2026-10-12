@@ -4,57 +4,11 @@ from django.core.validators import (
     MaxValueValidator,
     MinValueValidator,
 )
-from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from .utils import lesson_upload_path
+from utils import AcadimicLevelChoices, StreamNameChoices, lesson_upload_path
 
 # Create your models here.
-
-class AcadimicLevelChoices(models.IntegerChoices):
-    FIRST_YEAR = 1
-    SECOND_YEAR = 2
-    THIRD_LEVEL = 3
-
-class StreamNameChoices(models.TextChoices):
-    # Common core (first year)
-    COMMON_CORE_SCIENCE_TECH = "common_core_st", "Tronc commun Sciences et Technologie"
-    COMMON_CORE_LETTERS = "common_core_letters", "Tronc commun Lettres"
-
-    # Sciences et Technologie branch
-    EXPERIMENTAL_SCIENCES = "experimental_sciences", "Sciences expérimentales"
-    MATHEMATICS = "mathematics", "Mathématiques"
-    TECHNICAL_MATHEMATICS = "technical_mathematics", "Technique mathématique"
-    MANAGEMENT_ECONOMICS = "management_economics", "Gestion et économie"
-
-    # Technique mathématique options
-    MECHANICAL_ENGINEERING = "mechanical_engineering", "Génie mécanique"
-    ELECTRICAL_ENGINEERING = "electrical_engineering", "Génie électrique"
-    CIVIL_ENGINEERING = "civil_engineering", "Génie civil"
-    PROCESS_ENGINEERING = "process_engineering", "Génie des procédés"
-
-    # Lettres branch
-    LITERATURE_PHILOSOPHY = "literature_philosophy", "Lettres et philosophie"
-    FOREIGN_LANGUAGES = "foreign_languages", "Langues étrangères"
-
-class User(AbstractUser):
-    pass
-
-class Student(User):
-    level = models.IntegerField(choices=AcadimicLevelChoices)
-    stream = models.CharField(choices=StreamNameChoices)
-class Admin(User):
-
-
-    def generate_token(self):
-        """This function generate
-        token to new user and send the generated token to the student it will
-        send the email to the student with the url and redirect to
-        password and confirm password
-        """
-        print("Generate token for and send " \
-        "email with link and when link " \
-        "clicked it will redicrect to set password page")
 
 class Stream(models.Model):
     name = models.CharField(

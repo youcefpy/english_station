@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app_english',
+    'user_app',
 ]
 
 MIDDLEWARE = [
@@ -127,4 +128,4 @@ MAILERS = {
     },
 }
 
-AUTH_USER_MODEL = 'app_english.User'
+AUTH_USER_MODEL = 'user_app.User'
