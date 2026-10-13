@@ -5,9 +5,6 @@ from utils import AcadimicLevelChoices, StreamNameChoices
 
 # Create your models here.
 
-
-
-
 class User(AbstractUser):
     pass
 
