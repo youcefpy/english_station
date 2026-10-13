@@ -40,6 +40,8 @@ class Cours(models.Model):
         MP4 = "MP4", ".mp4"
         WEBM = "WEBM", ".webm"
         MOV = "MOV", ".mov"
+        PNG = "PNG", ".png"
+        JPEG= "JPEG", ".jpeg"
 
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -51,7 +53,7 @@ class Cours(models.Model):
         validators=[
             FileExtensionValidator(
                 allowed_extensions=['pdf', 'doc', 'docx', 'txt',
-                                    'mp4', 'mkv', 'avi', 'mov']
+                                    'mp4', 'mkv', 'avi', 'mov', 'png','jpeg']
             )
         ]
     )
