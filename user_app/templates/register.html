@@ -6,4 +6,10 @@
 
 <h1>Register Student</h1>
 
+<form action="" method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Register</button>
+</form>
+
 {% endblock %}

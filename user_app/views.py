@@ -1,3 +1,4 @@
+from allauth.core.internal.httpkit import redirect
 from django.shortcuts import render
 
 from .models import Admin, Student
@@ -9,6 +10,7 @@ def register_student(request):
         form = StudentForm(request.POST)
         if form.is_valid():
             form.save()
+            return redirect('login')
     else:
         form = StudentForm()
     context = {
