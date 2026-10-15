@@ -11,6 +11,9 @@ class User(AbstractUser):
 class Student(User):
     level = models.IntegerField(choices=AcadimicLevelChoices)
     stream = models.CharField(choices=StreamNameChoices)
+
+    def __str__(self):
+        return f"{self.first_name}, {self.last_name}, {self.level}, {self.stream}"
 class Admin(User):
 
 
