@@ -1,7 +1,8 @@
-from django.http import HttpRequest
-from django.http import HttpResponse
+import os
+
 from allauth.core.internal.httpkit import redirect
 from django.contrib.auth import authenticate, login
+from django.core.mail import send_mail
 from django.shortcuts import render
 
 from .forms import AdminForm, StudentForm
@@ -13,7 +14,24 @@ def register_student(request):
     if request.method == "POST":
         form = StudentForm(request.POST)
         if form.is_valid():
-            form.save()
+            student = form.save()
+            send_mail(
+                subject="Validation email",
+                message=f'''
+                Hello, a new student has require registration to the plateforme.
+                information of students:
+                 First name : {student.first_name} \n
+                 Last name : {student.last_name} \n
+                 Email: {student.email} \n
+                 Level acadmy : {student.level}
+                 Stram : {student.stream}
+                 ''',
+                from_email=f"{student.email}",
+                recipient_list=[
+                    os.getenv('EMAIL_HOST_USER','youcefboutiche@gmail.com'),
+                    ],
+                fail_silently=True,
+            )
             return redirect('login')
     else:
         form = StudentForm()
