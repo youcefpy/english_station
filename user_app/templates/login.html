@@ -7,6 +7,7 @@
 <h1>Welcom {{ first_name }} {{ last_name }}</h1>
 
 <form action="" method="POST">
+    {% csrf_token %}
     <input type="email" name="email" id="email">
     <input type="text" name="password" id="password">
     <button type="submit">LOGIN</button>

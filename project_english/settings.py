@@ -115,13 +115,17 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
 
 MAILERS = {
-    'default': {
+    "default": {
         "BACKEND": "django.core.mail.backends.smtp.EmailBackend",
-        "HOST": os.getenv("EMAIL_HOST"),
-        "PORT": int(os.getenv("EMAIL_PORT", "587")),
-        "USE_TLS": os.getenv("EMAIL_USE_TLS", "True").lower() == "true",
-        "USERNAME": os.getenv("EMAIL_HOST_USER"),
-        "PASSWORD": os.getenv("EMAIL_HOST_PASSWORD"),
+        "OPTIONS": {
+            "host": os.getenv("EMAIL_HOST", "smtp.gmail.com"),
+            "port": int(os.getenv("EMAIL_PORT", "465")),
+            "use_tls": int(os.getenv("EMAIL_USE_TLS",default=0)),
+            "use_ssl": int(os.getenv("EMAIL_USE_SSL",default=1)),
+            "username": os.getenv("EMAIL_HOST_USER"),
+            "password": os.getenv("EMAIL_HOST_PASSWORD"),
+            "timeout": 20,
+        },
     },
 }
 
