@@ -2,12 +2,10 @@ import os
 
 from allauth.core.internal.httpkit import redirect
 from django.contrib.auth import authenticate, login
-from django.core.mail import EmailMessage, send_mail
-from django.db import transaction
+from django.core.mail import send_mail
 from django.shortcuts import render
 
-from .forms import AdminForm, StudentForm
-from .models import Admin, Student
+from .forms import StudentForm
 
 # Create your views here.
 
@@ -30,8 +28,8 @@ def register_student(request):
                     f"Stream: {student.stream}\n"
                 ),
                 from_email= student.email,
-                recipient_list=[
-                    os.getenv(key="EMAIL_HOST_USER")
+                recipient_list = [
+                    os.getenv(key="EMAIL_HOST_USER", default="youcefboutiche28@gmail.com")
                 ],
             )
             return redirect(to="verification_info")
