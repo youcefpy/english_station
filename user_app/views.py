@@ -39,6 +39,10 @@ def register_student(request):
     return render(request, "register.html", {"form": form})
 
 def set_password_student(request):
+    """ 
+        set password to the user after acceptence of the admin (Teacher)
+        we need to filter by email. The email is unique
+    """
     if request.method == "POST":
         form= StudentFormSetPassWord(request.POST)
 
@@ -71,6 +75,6 @@ def admin_page(request):
     students = Student.objects.all()
     context = {
         'students':students
-
     }
+
     return render(request, 'admin_page.html', context= context)

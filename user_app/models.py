@@ -14,7 +14,7 @@ class Student(User):
 class Admin(User):
 
 
-    def generate_token(self):
+    def generate_token(self,email):
         """
         As Admin i check the new register of student.
         i check the information of the students.
@@ -28,6 +28,8 @@ class Admin(User):
         send the email to the student with the url and redirect to
         password and confirm password
         """
+        student = Student.objects.filter(email = email)
+        print(student)
         print("Generate token for and send " \
         "email with link and when link " \
         "clicked it will redicrect to set password page")
