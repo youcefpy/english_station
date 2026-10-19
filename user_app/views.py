@@ -89,10 +89,11 @@ def approve_student(request, student_id):
 
     return redirect("admin_page")
 
+@staff_member_required
 def admin_page(request):
     students = Student.objects.all()
     context = {
-        'students':students
+        'students':students,
     }
 
-    return render(request, 'admin_page.html', context= context)
+    return render(request, 'admin_panel.html', context= context)

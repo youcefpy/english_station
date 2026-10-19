@@ -3,6 +3,9 @@
 {% block title %}Admin Panel{% endblock %}
 
 {% block content %}
-
+{% for student in students %}
+    <p>{{ student }}</p>
+    
+{% endfor %}
 
 {% endblock %}
