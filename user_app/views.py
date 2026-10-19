@@ -1,9 +1,13 @@
 import os
 
 from allauth.core.internal.httpkit import redirect
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login
 from django.core.mail import send_mail
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
+from django.views.decorators.http import require_POST
+
+from user_app.services import send_password_setup_email
 
 from .forms import StudentForm, StudentFormSetPassWord
 from .models import Student
@@ -40,7 +44,7 @@ def register_student(request):
         form = StudentForm()
     return render(request, "register.html", {"form": form})
 
-def set_password_student(request):
+def set_password_student(request, uidb64, token):
     """ 
         set password to the user after acceptence of the admin (Teacher)
         we need to filter by email. The email is unique
@@ -72,6 +76,18 @@ def login_student(request):
         return redirect('index')
 
     return render(request,'login.html')
+
+@staff_member_required
+@require_POST
+def approve_student(request, student_id):
+    student = get_object_or_404(Student, pk=student_id)
+
+    if not student.is_active:
+        student.is_active = True
+        student.save(update_fields=["is_active"])
+        send_password_setup_email(student, request)
+
+    return redirect("admin_page")
 
 def admin_page(request):
     students = Student.objects.all()
