@@ -8,6 +8,10 @@ class StudentForm(ModelForm):
         model = Student
         fields = ['first_name','last_name','email','level','stream']
 
+class StudentFormSetPassWord(ModelForm):
+    class Meta:
+        model= Student
+        fields = ['password','confirm_password']
 class AdminForm(ModelForm):
     class Meta:
         model = Admin

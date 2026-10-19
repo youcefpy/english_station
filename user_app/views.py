@@ -4,8 +4,8 @@ from allauth.core.internal.httpkit import redirect
 from django.contrib.auth import authenticate, login
 from django.core.mail import send_mail
 from django.shortcuts import render
-
-from .forms import StudentForm
+from .models import Student
+from .forms import StudentForm, StudentFormSetPassWord
 
 # Create your views here.
 
@@ -37,6 +37,23 @@ def register_student(request):
         form = StudentForm()
     return render(request, "register.html", {"form": form})
 
+def set_password_student(request):
+    if request.method == "POST":
+        form= StudentFormSetPassWord(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+
+    else:
+        form = StudentFormSetPassWord()
+    context = {
+        'form':form
+    }
+
+    return render(request,'set_password.html', context=context)
+
+
 def login_student(request):
     email = request.POST["email"]
     password = request.POST["password"]
@@ -47,3 +64,11 @@ def login_student(request):
         return redirect('index')
 
     return render(request,'login.html')
+
+def admin_page(request):
+    students = Student.objects.all()
+    context = {
+        'students':students
+
+    }
+    return render(request, 'admin_page.html', context= context)

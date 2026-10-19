@@ -15,7 +15,15 @@ class Admin(User):
 
 
     def generate_token(self):
-        """This function generate
+        """
+        As Admin i check the new register of student.
+        i check the information of the students.
+        if student in the database of school:
+            i send email to the student where in the email i have a url
+            redirect to set_password.html page
+        else :
+            igone the email
+        This function generate
         token to new user and send the generated token to the student it will
         send the email to the student with the url and redirect to
         password and confirm password
