@@ -14,7 +14,7 @@ class Student(User):
 class Admin(User):
 
 
-    def generate_token(self,email):
+    def generate_url_token(self,email):
         """
         As Admin i check the new register of student.
         i check the information of the students.

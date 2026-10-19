@@ -70,7 +70,7 @@ def unit_view(request):
 
         if form.is_valid():
             form.save()
-        return render("index")
+            return render("index")
     else:
         all_units = Unit.objects.all()
         form = forms.UnitForm()

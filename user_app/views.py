@@ -16,6 +16,8 @@ def register_student(request):
         if form.is_valid():
             student = form.save(commit=False)
             student.username = student.email
+            student.is_active = False
+            student.set_unusable_password()
             student.save()
             send_mail(
                 subject="Validation email",
