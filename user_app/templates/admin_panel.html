@@ -21,7 +21,14 @@
             <td>{{ student.level }}</td>
             <td>{{ student.stream }}</td>
             <td>
-                <button>active</button>
+                {% if student.is_active %}
+                    <span>Active</span>
+                {% else %}
+                    <form method="post" action="{% url 'approve_student' student.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Activate</button>
+                    </form>
+                {% endif %}
                 <button>delete</button>
             </td>
         </tr>

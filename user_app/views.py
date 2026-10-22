@@ -1,10 +1,9 @@
 import os
 
-from allauth.core.internal.httpkit import redirect
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login
 from django.core.mail import send_mail
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
 from user_app.services import send_password_setup_email
@@ -87,7 +86,7 @@ def approve_student(request, student_id):
         student.save(update_fields=["is_active"])
         send_password_setup_email(student, request)
 
-    return redirect("admin_page")
+    return redirect("admin_panel")
 
 @staff_member_required
 def admin_page(request):
@@ -95,5 +94,4 @@ def admin_page(request):
     context = {
         'students':students,
     }
-
     return render(request, 'admin_panel.html', context= context)
