@@ -4,12 +4,11 @@
 
 {% block content %}
 
-<h1>Welcom {{ first_name }} {{ last_name }}</h1>
+<h1>Welcome {{ first_name }} {{ last_name }}</h1>
 
 <form action="" method="POST">
     {% csrf_token %}
-    <input type="email" name="email" id="email">
-    <input type="text" name="password" id="password">
+    {{ form.as_p }}
     <button type="submit">LOGIN</button>
 </form>
 {% endblock %}

@@ -39,3 +39,12 @@ class AdminForm(ModelForm):
     class Meta:
         model = Admin
         fields = '__all__'
+
+
+class StudentLogin(forms.Form):
+    email = forms.EmailField(
+        label="Email",
+        max_length=255,
+        widget=forms.EmailInput(attrs={"placeholder": "student@email.com"}),
+    )
+    password = forms.CharField(widget=forms.PasswordInput())

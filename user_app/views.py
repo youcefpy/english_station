@@ -2,13 +2,16 @@ import os
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.http import require_POST
 
 from user_app.services import send_password_setup_email
 
-from .forms import StudentForm, StudentFormSetPassWord
+from .forms import StudentForm, StudentFormSetPassWord, StudentLogin
 from .models import Student
 
 # Create your views here.
@@ -44,12 +47,17 @@ def register_student(request):
     return render(request, "register.html", {"form": form})
 
 def set_password_student(request, uidb64, token):
-    """ 
-        set password to the user after acceptence of the admin (Teacher)
-        we need to filter by email. The email is unique
-    """
+    try:
+        student_id = force_str(urlsafe_base64_decode(uidb64))
+        student = get_object_or_404(Student, pk=student_id)
+    except (TypeError, ValueError, OverflowError):
+        return render(request, "set_password.html", {"error": "This password setup link is invalid or expired."}, status=400)
+
+    if not default_token_generator.check_token(student, token):
+        return render(request, "set_password.html", {"error": "This password setup link is invalid or expired."}, status=400)
+
     if request.method == "POST":
-        form= StudentFormSetPassWord(request.POST)
+        form = StudentFormSetPassWord(request.POST, instance=student)
 
         if form.is_valid():
             student = form.save(commit=False)
@@ -66,15 +74,22 @@ def set_password_student(request, uidb64, token):
 
 
 def login_student(request):
-    email = request.POST["email"]
-    password = request.POST["password"]
-    user = authenticate(request, username=email, password=password)
-    if user is not None:
-        login(request, user)
-        # Redirect to a success page.
-        return redirect('index')
-
-    return render(request,'login.html')
+    if request.method == "POST":
+        form = StudentLogin(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+        user = authenticate(request, username=email, password=password)
+        if user is not None:
+            login(request, user)
+            # Redirect to a success page.
+            return redirect('index')
+    else:
+        form = StudentLogin()
+    context = {
+        'form':form
+    }
+    return render(request,template_name='login.html',context=context)
 
 @staff_member_required
 @require_POST
