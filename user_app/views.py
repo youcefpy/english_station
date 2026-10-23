@@ -49,12 +49,21 @@ def register_student(request):
 def set_password_student(request, uidb64, token):
     try:
         student_id = force_str(urlsafe_base64_decode(uidb64))
+        print(f"student_id ===> {student_id}")
         student = get_object_or_404(Student, pk=student_id)
     except (TypeError, ValueError, OverflowError):
-        return render(request, "set_password.html", {"error": "This password setup link is invalid or expired."}, status=400)
+        return render(request, template_name = "set_password.html",
+        context={
+            "error": "This password setup link is invalid or expired."
+        },
+        status=400)
 
     if not default_token_generator.check_token(student, token):
-        return render(request, "set_password.html", {"error": "This password setup link is invalid or expired."}, status=400)
+        return render(request, "set_password.html", context={
+            "error": "This password setup link is invalid or expired."
+        },
+        status=400
+        )
 
     if request.method == "POST":
         form = StudentFormSetPassWord(request.POST, instance=student)
