@@ -1,7 +1,7 @@
 import os
 
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
@@ -99,6 +99,11 @@ def login_student(request):
         'form':form
     }
     return render(request,template_name='login.html',context=context)
+
+@require_POST
+def logout_student(request):
+    logout(request)
+    return redirect(to='login')
 
 @staff_member_required
 @require_POST

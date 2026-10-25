@@ -12,4 +12,5 @@ urlpatterns = [
     path('admin-panel/',views.admin_page,name='admin_panel'),
     path('admin-panel/students/<int:student_id>/approve/',
          views.approve_student,name='approve_student'),
+    path('logout/',view= views.logout_student, name='logout_student'),
 ]

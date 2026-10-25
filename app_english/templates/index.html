@@ -3,6 +3,14 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
+{% if user.is_authenticated %}
+    <p>Hello {{ user.first_name }}</p>
+    <form action="{% url 'logout_student' %}" method="POST">
+        {% csrf_token %}
+        <button>Logout</button>
+    </form>
+{% endif %}
+
 <h1>Welcome to the home page</h1>
 <p>this is a home page by the way</p>
 
