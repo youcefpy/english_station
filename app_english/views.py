@@ -25,7 +25,7 @@ def index(request):
 
 #login required for student and admin
 @login_required
-def cours_view(request,stream=None):
+def cours_view(request):
     if request.method == "POST":
         form = forms.CoursForm(request.POST)
         if form.is_valid():
@@ -34,10 +34,16 @@ def cours_view(request,stream=None):
             return redirect('index')
     else :
         #for admin
-        if request.user.is_authenticated and request.user.issuperuser:
+        if request.user.is_authenticated and request.user.is_superuser:
             all_cours = Cours.objects.all()
+        # for student
         elif request.user.is_authenticated:
-            all_cours = Cours.objects.filter(stream=stream)
+            stream = request.user.student.stream
+            level = request.user.student.level
+            all_cours = Cours.objects.filter(
+                stream__name=stream,
+                level=level
+            )
 
         form = forms.CoursForm()
     context = {

@@ -3,11 +3,16 @@
 {% block title %}Cours{% endblock %}
 
 {% block content %}
+    {% if user.is_superuser %}
+        <form action="" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit">
+        </form>
+    {% endif %}
+    {% for cours in all_cours %}
+        {{ cours }}
+    {% endfor %}
 
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Submit">
-    </form>
 
 {% endblock %}

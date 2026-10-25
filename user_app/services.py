@@ -24,7 +24,7 @@ def send_password_setup_email(student, request):
         message=(
             f"Hello,{student.first_name}\n"
             f"We juste confirmed your information click on the"
-            "link bellow to confirm your information and set your password"
+            "link bellow to confirm your information and set your password\n "
             f"{setup_url}"
         ),
         from_email= os.getenv(key="EMAIL_HOST_USER"),

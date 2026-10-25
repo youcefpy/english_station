@@ -9,8 +9,8 @@ class User(AbstractUser):
     pass
 
 class Student(User):
-    level = models.IntegerField(choices=AcadimicLevelChoices,null=False)
-    stream = models.CharField(choices=StreamNameChoices, null=False)
+    level = models.IntegerField(max_length=55,choices=AcadimicLevelChoices,null=False)
+    stream = models.CharField(max_length=60,choices=StreamNameChoices, null=False)
 class Admin(User):
 
 
