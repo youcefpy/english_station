@@ -63,12 +63,13 @@ class Cours(models.Model):
 
     @property
     def file_type(self):
-        ext = os.path.splitext(self.lesson.name)[1].lower()
-        if ext == ".pdf":
+        assert self.lesson.name is not None
+        ext = self.lesson.name.split('.')[1].lower()
+        if ext == "pdf":
             return "pdf"
-        if ext in (".mp4", ".mov"):
+        if ext in ("mp4", "mov"):
             return "video"
-        if ext in (".png", ".jpeg", ".jpg"):
+        if ext in ("png", "jpeg", "jpg"):
             return "image"
         return "other"
 
