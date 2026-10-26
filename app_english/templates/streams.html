@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+
+{% block title %}Streams{% endblock %}
+
+{% block content %}
+
+{% if user.is_superuser %}
+    <form action="" method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button>Submit</button>
+
+    </form>
+{% endif %}
+
+<table>
+    <thead>
+        <tr>
+            <th scope="col">Stream Name</th>
+            <th scope="col">Level</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stream in streams %}
+            <tr>
+                <td>{{ stream.id }}</td>
+                <td>{{ stream.name }}</td>
+                <td>{{ stream.level }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+
+
+    
+
+{% endblock %}

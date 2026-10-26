@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from utils import AcadimicLevelChoices, StreamNameChoices
@@ -9,8 +10,14 @@ class User(AbstractUser):
     pass
 
 class Student(User):
-    level = models.IntegerField(max_length=55,choices=AcadimicLevelChoices,null=False)
-    stream = models.CharField(max_length=60,choices=StreamNameChoices, null=False)
+    level = models.IntegerField(choices=AcadimicLevelChoices,null=False)
+    stream = models.CharField(max_length=50,choices=StreamNameChoices, null=False)
+
+    def clean(self):
+        super().clean()
+        if self.level > 3 or self.level < 1:
+            raise ValidationError("The level should be in range of 1 to 3. Please select the right level.")
+
 class Admin(User):
 
 

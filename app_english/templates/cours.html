@@ -11,7 +11,14 @@
         </form>
     {% endif %}
     {% for cours in all_cours %}
-        {{ cours }}
+        <section>
+            <img src="" alt="image-cours">
+            <h2>{{ cours.title }}</h2>
+            <p>{{ cours.description }}</p>
+            {% if cours.format == 'PDF' %}
+                <p>{{ cours.lesson }}</p>
+            {% endif %}    
+        </section>
     {% endfor %}
 
 

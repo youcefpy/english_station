@@ -54,20 +54,31 @@ def cours_view(request):
 
 @login_required
 def stream_view(request):
-    if request.method == "POST":
-        form = forms.StreamForm(request.POST)
-        if form.is_valid():
-            form.save()
-        return redirect('index')
-    else :
-        all_streams = Stream.objects.all()
+    # only super user can add stream
+    if request.user.is_superuser:
+        if request.method == "POST":
+                form = forms.StreamForm(request.POST)
+                if form.is_valid():
+                    form.save()
+                return redirect('index')
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            all_streams = Stream.objects.all()
+        else:
+            stream = request.user.student.stream
+            level = request.user.student.level
+            all_streams = Stream.objects.filter(
+                name = stream,
+                level = level
+            )
+    else:
         form = forms.Stream()
     context = {
         "form" : form,
-        "stream" : all_streams
+        "streams" : all_streams
     }
 
-    return render(request,'stream.html',context)
+    return render(request,'streams.html',context)
 
 @login_required
 def unit_view(request):
