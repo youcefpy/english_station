@@ -2,7 +2,7 @@ from django.db import models
 
 
 def lesson_upload_path(instance, filename):
-    return f"lesson/acadimic-level{instance.stream.level}/{instance.stream.name}/{instance.unit.name}/{filename}"
+    return f"lessons/acadimic-level-{instance.stream.level}/{instance.stream.name}/{instance.unit.name}/{filename}"
 
 
 class AcadimicLevelChoices(models.IntegerChoices):

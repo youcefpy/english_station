@@ -130,3 +130,7 @@ MAILERS = {
 }
 
 AUTH_USER_MODEL = 'user_app.User'
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+# X_FRAME_OPTIONS = "SAMEORIGIN"

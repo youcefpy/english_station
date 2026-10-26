@@ -10,16 +10,33 @@
             <input type="submit" value="Submit">
         </form>
     {% endif %}
+
     {% for cours in all_cours %}
         <section>
             <img src="" alt="image-cours">
             <h2>{{ cours.title }}</h2>
             <p>{{ cours.description }}</p>
-            {% if cours.format == 'PDF' %}
-                <p>{{ cours.lesson }}</p>
-            {% endif %}    
+            
+            {% if cours.file_type == 'pdf' %}
+                    <iframe src="{{ cours.lesson.url }}" width="100%" height="600"></iframe>
+
+            {% elif cours.file_type == 'mp4' or cours.file_type == 'webm' %}
+                    <video controls width="100%">
+                        <source src="{{ cours.lesson.url }}" type="video/mp4">
+                        Your browser does not support video.
+                    </video>
+
+            {% elif cours.file_type == 'mp3' %}
+                <audio controls src="{{ cours.lesson.url }}"></audio>
+
+            {% elif cours.file_type == 'jpg' or cours.file_type == 'png' %}
+                <img src="{{ cours.lesson.url }}" style="max-width:100%">
+
+            {% else %}
+                <a href="{{ cours.lesson.url }}" download>Download the lesson</a>
+            {% endif %}
+                        
         </section>
     {% endfor %}
-
 
 {% endblock %}

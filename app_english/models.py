@@ -1,3 +1,4 @@
+import os
 from django.conf import settings
 from django.core.validators import (
     FileExtensionValidator,
@@ -59,6 +60,18 @@ class Cours(models.Model):
     )
     def __str__(self):
         return f"{self.stream.name}: {self.unit.name} : {self.title}"
+
+    @property
+    def file_type(self):
+        ext = os.path.splitext(self.lesson.name)[1].lower()
+        if ext == ".pdf":
+            return "pdf"
+        if ext in (".mp4", ".mov"):
+            return "video"
+        if ext in (".png", ".jpeg", ".jpg"):
+            return "image"
+        return "other"
+
 class Exam(models.Model):
     title = models.CharField(max_length=255)
     cours = models.OneToOneField(Cours,on_delete=models.CASCADE)
