@@ -1,5 +1,3 @@
-from dataclasses import fields
-
 from django import forms
 from django.forms import ModelForm
 
@@ -10,6 +8,13 @@ class StudentForm(ModelForm):
     class Meta:
         model = Student
         fields = ['first_name','last_name','email','level','stream']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "form-select" if isinstance(
+                field.widget, forms.Select
+            ) else "form-control"
 
 class StudentFormSetPassWord(ModelForm):
     confirm_password = forms.CharField(
@@ -45,6 +50,11 @@ class StudentLogin(forms.Form):
     email = forms.EmailField(
         label="Email",
         max_length=255,
-        widget=forms.EmailInput(attrs={"placeholder": "student@email.com"}),
+        widget=forms.EmailInput(attrs={
+            "placeholder": "student@email.com",
+            "class": "form-control",
+        }),
     )
-    password = forms.CharField(widget=forms.PasswordInput())
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={"class": "form-control"})
+    )

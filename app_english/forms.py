@@ -53,6 +53,10 @@ class CoursForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "form-select" if isinstance(
+                field.widget, forms.Select
+            ) else "form-control"
         level = self.data.get(self.add_prefix("level"))
         stream_id = self.data.get(self.add_prefix("stream"))
 

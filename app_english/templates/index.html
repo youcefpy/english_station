@@ -1,17 +1,69 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Home | English Station{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-    <p>Hello {{ user.first_name }}</p>
-    <form action="{% url 'logout_student' %}" method="POST">
-        {% csrf_token %}
-        <button>Logout</button>
-    </form>
-{% endif %}
+<main class="container py-4 py-lg-5">
+    <header class="d-flex justify-content-between align-items-center gap-3 mb-4">
+        <a class="text-decoration-none fw-bold text-primary fs-5" href="{% url 'index' %}">English Station</a>
+        {% if user.is_authenticated %}
+            <form action="{% url 'logout_student' %}" method="post" class="m-0">
+                {% csrf_token %}
+                <button class="btn btn-outline-secondary btn-sm" type="submit">Log out</button>
+            </form>
+        {% endif %}
+    </header>
 
-<h1>Welcome to the home page</h1>
-<p>this is a home page by the way</p>
+    <section class="rounded-3 bg-primary text-white p-4 p-md-5 mb-4 mb-lg-5">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-8">
+                <p class="text-white-50 text-uppercase fw-semibold small mb-2">Your learning space</p>
+                <h1 class="display-6 fw-bold mb-3">
+                    {% if user.first_name %}Welcome, {{ user.first_name }}!{% else %}Welcome!{% endif %}
+                </h1>
+                <p class="lead mb-0">Keep building your English skills, one lesson at a time.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a class="btn btn-light btn-lg text-primary fw-semibold" href="{% url 'cours' %}">Explore courses</a>
+            </div>
+        </div>
+    </section>
 
+    <section aria-labelledby="continue-heading">
+        <div class="d-flex justify-content-between align-items-end mb-3">
+            <div>
+                <p class="text-primary text-uppercase fw-semibold small mb-1">Get started</p>
+                <h2 class="h3 mb-0" id="continue-heading">Continue learning</h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            <div class="col-12 col-md-6 col-lg-5">
+                <article class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="rounded-3 bg-light text-primary d-flex align-items-center justify-content-center mb-3" style="width: 3rem; height: 3rem;" aria-hidden="true">
+                            <span class="fw-bold fs-5">A</span>
+                        </div>
+                        <h3 class="h5">My courses</h3>
+                        <p class="text-muted flex-grow-1">Open your lessons and find the course materials for your class.</p>
+                        <a class="btn btn-primary align-self-start" href="{% url 'cours' %}">View courses</a>
+                    </div>
+                </article>
+            </div>
+            {% if user.is_superuser %}
+                <div class="col-12 col-md-6 col-lg-5">
+                    <article class="card h-100 border-0 shadow-sm">
+                        <div class="card-body p-4 d-flex flex-column">
+                            <div class="rounded-3 bg-warning text-dark d-flex align-items-center justify-content-center mb-3" style="width: 3rem; height: 3rem;" aria-hidden="true">
+                                <span class="fw-bold fs-5">✓</span>
+                            </div>
+                            <h3 class="h5">Student registrations</h3>
+                            <p class="text-muted flex-grow-1">Review and approve student registration requests.</p>
+                            <a class="btn btn-outline-primary align-self-start" href="{% url 'admin_panel' %}">Open admin panel</a>
+                        </div>
+                    </article>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+</main>
 {% endblock %}

@@ -1,43 +1,85 @@
 {% extends "base.html" %}
 
-{% block title %}Cours{% endblock %}
+{% block title %}Courses{% endblock %}
 
 {% block content %}
+<main class="container py-4 py-lg-5">
+    <header class="mb-4 mb-lg-5">
+        <p class="text-primary text-uppercase fw-semibold small mb-2">Learning library</p>
+        <h1 class="display-6 fw-bold mb-2">Your courses</h1>
+        <p class="text-muted mb-0">Browse your lessons and open the material for each course.</p>
+    </header>
+
     {% if user.is_superuser %}
-        <form action="" method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <input type="submit" value="Submit">
-        </form>
+        <section class="card border-0 shadow-sm mb-4 mb-lg-5" aria-labelledby="add-course-heading">
+            <div class="card-body p-4">
+                <h2 class="h4 mb-3" id="add-course-heading">Add a course</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
+                            {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                        </div>
+                    {% endfor %}
+                    {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+                    <button class="btn btn-primary px-4" type="submit">Add course</button>
+                </form>
+                {{ form.media }}
+            </div>
+        </section>
     {% endif %}
 
-    {% for cours in all_cours %}
-        <section>
-            <img src="" alt="image-cours">
-            <h2>{{ cours.title }}</h2>
-            <p>{{ cours.description }}</p>
-            <div class="dispay-cours" style="display: flex; justify-content:center; margin-bottom:1rem;">
-                {% if cours.file_type == 'pdf' %}
-                        <iframe src="{{ cours.lesson.url }}" width="80%" height="600"></iframe>
-    
-                {% elif cours.file_type == 'mp4' or cours.file_type == 'webm' %}
-                        <video controls width="100%">
-                            <source src="{{ cours.lesson.url }}" type="video/mp4">
-                            Your browser does not support video.
-                        </video>
-    
-                {% elif cours.file_type == 'mp3' %}
-                    <audio controls src="{{ cours.lesson.url }}"></audio>
-    
-                {% elif cours.file_type == 'jpg' or cours.file_type == 'png' %}
-                    <img src="{{ cours.lesson.url }}" style="max-width:100%">
-    
-                {% else %}
-                    <a href="{{ cours.lesson.url }}" download>Download the lesson</a>
-                {% endif %}
-            </div>
-                        
-        </section>
-    {% endfor %}
+    {% if all_cours %}
+        <div class="row g-4">
+            {% for cours in all_cours %}
+                <div class="col-12">
+                    <article class="card border-0 shadow-sm overflow-hidden">
+                        <div class="card-body p-4">
+                            <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
+                                <div>
+                                    <span class="badge text-bg-primary mb-2">{{ cours.get_format_cours_display }}</span>
+                                    <h2 class="h3 mb-2">{{ cours.title }}</h2>
+                                    <p class="text-muted mb-0">{{ cours.description }}</p>
+                                </div>
+                                <div class="text-md-end flex-shrink-0">
+                                    <span class="badge rounded-pill text-bg-light border">{{ cours.unit.name }}</span>
+                                </div>
+                            </div>
 
+                            <div class="bg-light rounded-3 p-2 p-md-3 text-center">
+                                {% if cours.file_type == 'pdf' %}
+                                    <div class="ratio" style="--bs-aspect-ratio: 75%;">
+                                        <iframe src="{{ cours.lesson.url }}" title="{{ cours.title }}" class="rounded border" loading="lazy"></iframe>
+                                    </div>
+                                {% elif cours.file_type == 'video' %}
+                                    <video class="w-100 rounded" controls preload="metadata">
+                                        <source src="{{ cours.lesson.url }}">
+                                        Your browser does not support video playback.
+                                    </video>
+                                {% elif cours.file_type == 'image' %}
+                                    <img src="{{ cours.lesson.url }}" alt="{{ cours.title }}" class="img-fluid rounded" loading="lazy">
+                                {% else %}
+                                    <div class="py-4">
+                                        <p class="text-muted mb-3">Open or download this lesson to view it.</p>
+                                        <a class="btn btn-outline-primary" href="{{ cours.lesson.url }}" download>Download lesson</a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card border-0 bg-light text-center py-5">
+            <div class="card-body">
+                <h2 class="h4">No courses yet</h2>
+                <p class="text-muted mb-0">There are no lessons available here at the moment.</p>
+            </div>
+        </div>
+    {% endif %}
+</main>
 {% endblock %}
