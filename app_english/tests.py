@@ -1,6 +1,9 @@
+import numbers
+
 from django.test import TestCase
 
 from app_english.models import Cours, Exam, Stream, Unit
+from utils import AcadimicLevelChoices, StreamNameChoices
 
 # Create your tests here.
 
@@ -8,17 +11,20 @@ from app_english.models import Cours, Exam, Stream, Unit
 class CoursTestCase(TestCase):
     def setUp(self):
         self.stream = Stream.objects.create(
-            name="English",
-            description="English stream",
+            name = StreamNameChoices.CIVIL_ENGINEERING.name,
             level=1,
         )
         self.unit = Unit.objects.create(
+            number=1,
+            level=1,
+            stream=self.stream,
             name="Grammar",
             description="Grammar lessons",
         )
         self.cours = Cours.objects.create(
             title="Introduction to Grammar",
             description="An introductory grammar lesson",
+            level=1,
             unit=self.unit,
             stream=self.stream,
         )
@@ -29,21 +35,21 @@ class CoursTestCase(TestCase):
 
     def test_cours_is_created(self):
         cours = Cours.objects.get(pk=self.cours.pk)
+        self.assertEqual(cours.level,1)
         self.assertEqual(cours.title, "Introduction to Grammar")
         self.assertEqual(cours.unit, self.unit)
         self.assertEqual(cours.stream, self.stream)
 
     def test_stream_is_created(self):
         stream = Stream.objects.get(pk=self.stream.pk)
-        self.assertEqual(stream.name, "English")
-        self.assertEqual(stream.description, "English stream")
+        self.assertEqual(stream.name, "CIVIL_ENGINEERING")
         self.assertEqual(stream.level, 1)
 
     def test_stream_can_be_updated(self):
-        self.stream.name = "Advanced English"
+        self.stream.name = StreamNameChoices.CIVIL_ENGINEERING
         self.stream.save()
         self.stream.refresh_from_db()
-        self.assertEqual(self.stream.name, "Advanced English")
+        self.assertEqual(self.stream.name, "civil_engineering")
 
     def test_stream_can_be_deleted(self):
         stream_id = self.stream.pk
@@ -52,6 +58,8 @@ class CoursTestCase(TestCase):
 
     def test_unit_is_created(self):
         unit = Unit.objects.get(pk=self.unit.pk)
+        self.assertEqual(unit.number,1)
+        self.assertEqual(unit.level,1)
         self.assertEqual(unit.name, "Grammar")
         self.assertEqual(unit.description, "Grammar lessons")
 
@@ -80,24 +88,27 @@ class CoursTestCase(TestCase):
 
 class ExamTestCase(TestCase):
     def setUp(self):
-        stream = Stream.objects.create(
-            name="English",
-            description="English stream",
+        self.stream = Stream.objects.create(
+            name=StreamNameChoices.CIVIL_ENGINEERING.name,
             level=1,
         )
-        unit = Unit.objects.create(
+        self.unit = Unit.objects.create(
+            number=1,
+            level=1,
+            stream=self.stream,
             name="Grammar",
             description="Grammar lessons",
         )
-        cours = Cours.objects.create(
+        self.cours = Cours.objects.create(
             title="Introduction to Grammar",
             description="An introductory grammar lesson",
-            unit=unit,
-            stream=stream,
+            level=1,
+            unit=self.unit,
+            stream=self.stream,
         )
         self.exam = Exam.objects.create(
             title="Grammar Exam",
-            cours=cours,
+            cours=self.cours,
         )
     def test_exam_get(self):
         exams = Exam.objects.all()
