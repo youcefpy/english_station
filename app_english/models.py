@@ -1,4 +1,6 @@
+from this import s
 import os
+
 from django.conf import settings
 from django.core.validators import (
     FileExtensionValidator,
@@ -21,6 +23,7 @@ class Stream(models.Model):
 
     def __str__(self):
         return f"{self.level}-{self.name}"
+
 class Unit(models.Model):
     number = models.PositiveIntegerField(unique=False)
     name=  models.CharField(max_length=255)
@@ -32,6 +35,13 @@ class Unit(models.Model):
 
     def __str__(self):
         return f"{self.name}"
+
+class Semester(models.Model):
+    number = models.IntegerField()
+    unit = models.ForeignKey(Unit,on_delete=models.CASCADE)
+    level = models.IntegerField(choices=AcadimicLevelChoices)
+    def __str__(self):
+        return f"{self.number}, {self.unit.name}, {self.level}"
 
 class Cours(models.Model):
     class FormatCours(models.TextChoices):
