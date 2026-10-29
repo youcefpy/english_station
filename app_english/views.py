@@ -36,20 +36,20 @@ def cours_view(request, cours_id):
     else :
         #for admin
         if request.user.is_authenticated and request.user.is_superuser:
-            all_cours = Cours.objects.all()
+            cours = Cours.objects.all()
         # for student
         elif request.user.is_authenticated:
             stream = request.user.student.stream
             level = request.user.student.level
-            all_cours = Cours.objects.filter(
+            cours = Cours.objects.filter(
                 id = cours_id,
                 stream__name=stream,
                 level=level
-            )
+            ).first()
 
         form = forms.CoursForm()
     context = {
-        'all_cours' : all_cours,
+        'cours' : cours,
         'form': form
     }
     return render(request,'cours.html',context=context)

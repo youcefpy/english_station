@@ -6,10 +6,10 @@
 <main class="container py-4 py-lg-5">
     <header class="mb-4 mb-lg-5">
         <p class="text-primary text-uppercase fw-semibold small mb-2">Learning library</p>
-        <h1 class="display-6 fw-bold mb-2">Your courses</h1>
+        <h1 class="display-6 fw-bold mb-2">Cours: {{ cours.title }}</h1>
         <p class="text-muted mb-0">Browse your lessons and open the material for each course.</p>
     </header>
-
+    {{ cours }}
     {% if user.is_superuser %}
         <section class="card border-0 shadow-sm mb-4 mb-lg-5" aria-labelledby="add-course-heading">
             <div class="card-body p-4">
@@ -32,46 +32,44 @@
         </section>
     {% endif %}
 
-    {% if all_cours %}
+    {% if cours %}
         <div class="row g-4">
-            {% for cours in all_cours %}
-                <div class="col-12">
-                    <article class="card border-0 shadow-sm overflow-hidden">
-                        <div class="card-body p-4">
-                            <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
-                                <div>
-                                    <span class="badge text-bg-primary mb-2">{{ cours.get_format_cours_display }}</span>
-                                    <h2 class="h3 mb-2">{{ cours.title }}</h2>
-                                    <p class="text-muted mb-0">{{ cours.description }}</p>
-                                </div>
-                                <div class="text-md-end flex-shrink-0">
-                                    <span class="badge rounded-pill text-bg-light border">{{ cours.unit.name }}</span>
-                                </div>
+            <div class="col-12">
+                <article class="card border-0 shadow-sm overflow-hidden">
+                    <div class="card-body p-4">
+                        <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
+                            <div>
+                                <span class="badge text-bg-primary mb-2">{{ cours.get_format_cours_display }}</span>
+                                <h2 class="h3 mb-2">{{ cours.title }}</h2>
+                                <p class="text-muted mb-0">{{ cours.description }}</p>
                             </div>
-
-                            <div class="bg-light rounded-3 p-2 p-md-3 text-center">
-                                {% if cours.file_type == 'pdf' %}
-                                    <div class="ratio" style="--bs-aspect-ratio: 75%;">
-                                        <iframe src="{{ cours.lesson.url }}" title="{{ cours.title }}" class="rounded border" loading="lazy"></iframe>
-                                    </div>
-                                {% elif cours.file_type == 'video' %}
-                                    <video class="w-100 rounded" controls preload="metadata">
-                                        <source src="{{ cours.lesson.url }}">
-                                        Your browser does not support video playback.
-                                    </video>
-                                {% elif cours.file_type == 'image' %}
-                                    <img src="{{ cours.lesson.url }}" alt="{{ cours.title }}" class="img-fluid rounded" loading="lazy">
-                                {% else %}
-                                    <div class="py-4">
-                                        <p class="text-muted mb-3">Open or download this lesson to view it.</p>
-                                        <a class="btn btn-outline-primary" href="{{ cours.lesson.url }}" download>Download lesson</a>
-                                    </div>
-                                {% endif %}
+                            <div class="text-md-end flex-shrink-0">
+                                <span class="badge rounded-pill text-bg-light border">{{ cours.unit.name }}</span>
                             </div>
                         </div>
-                    </article>
-                </div>
-            {% endfor %}
+
+                        <div class="bg-light rounded-3 p-2 p-md-3 text-center">
+                            {% if cours.file_type == 'pdf' %}
+                                <div class="ratio" style="--bs-aspect-ratio: 75%;">
+                                    <iframe src="{{ cours.lesson.url }}" title="{{ cours.title }}" class="rounded border" loading="lazy"></iframe>
+                                </div>
+                            {% elif cours.file_type == 'video' %}
+                                <video class="w-100 rounded" controls preload="metadata">
+                                    <source src="{{ cours.lesson.url }}">
+                                    Your browser does not support video playback.
+                                </video>
+                            {% elif cours.file_type == 'image' %}
+                                <img src="{{ cours.lesson.url }}" alt="{{ cours.title }}" class="img-fluid rounded" loading="lazy">
+                            {% else %}
+                                <div class="py-4">
+                                    <p class="text-muted mb-3">Open or download this lesson to view it.</p>
+                                    <a class="btn btn-outline-primary" href="{{ cours.lesson.url }}" download>Download lesson</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </article>
+            </div>
         </div>
     {% else %}
         <div class="card border-0 bg-light text-center py-5">
