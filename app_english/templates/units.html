@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Units{% endblock %}
+
+{% block content %}
+<main class="container py-4 py-lg-5">
+    <header class="mb-4 mb-lg-5">
+        <p class="text-primary text-uppercase fw-semibold small mb-2">Course structure</p>
+        <h1 class="display-6 fw-bold mb-2">Units</h1>
+        <p class="text-muted mb-0">Explore the lessons grouped by unit.</p>
+    </header>
+
+    {% if user.is_superuser %}
+        <section class="card border-0 shadow-sm mb-4 mb-lg-5" aria-labelledby="add-unit-heading">
+            <div class="card-body p-4">
+                <h2 class="h4 mb-3" id="add-unit-heading">Add a unit</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% for error in field.errors %}<div class="text-danger small mt-1">{{ error }}</div>{% endfor %}
+                        </div>
+                    {% endfor %}
+                    {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+                    <button class="btn btn-primary" type="submit">Save unit</button>
+                </form>
+            </div>
+        </section>
+    {% endif %}
+
+    {% if all_units %}
+        <div class="row g-4">
+            {% for unit in all_units %}
+                <div class="col-12">
+                    <section class="card border-0 shadow-sm">
+                        <div class="card-body p-4">
+                            <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-3">
+                                <div>
+                                    <p class="text-primary text-uppercase fw-semibold small mb-1">Unit {{ unit.number }}</p>
+                                    <h2 class="h3 mb-2">{{ unit.name }}</h2>
+                                    <p class="text-muted mb-0">{{ unit.description }}</p>
+                                </div>
+                                <span class="badge rounded-pill text-bg-light border align-self-md-start">{{ unit.get_level_display }}</span>
+                            </div>
+
+                            <hr>
+                            <h3 class="h5 mb-3">Courses in this unit</h3>
+                            {% with unit.cours_set.all as unit_courses %}
+                                {% if unit_courses %}
+                                    <div class="list-group list-group-flush">
+                                        {% for cours in unit_courses %}
+                                            <div class="list-group-item px-0 py-3">
+                                                <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+                                                    <div>
+                                                        <h4 class="h6 mb-1">{{ cours.title }}</h4>
+                                                        <p class="text-muted small mb-1">{{ cours.description }}</p>
+                                                        <span class="badge text-bg-secondary">{{ cours.get_format_cours_display }}</span>
+                                                    </div>
+                                                    <a class="btn btn-outline-primary btn-sm align-self-sm-center" href="{% url 'cours' cours.id  %} " target="_blank" rel="noopener">Open lesson</a>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% else %}
+                                    <p class="text-muted mb-0">No courses have been added to this unit yet.</p>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    </section>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card border-0 bg-light text-center py-5">
+            <div class="card-body">
+                <h2 class="h4">No units available</h2>
+                <p class="text-muted mb-0">Units and their courses will appear here when available.</p>
+            </div>
+        </div>
+    {% endif %}
+</main>
+{% endblock %}

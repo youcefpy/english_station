@@ -1,6 +1,7 @@
 from ssl import Options
 
 from django.contrib.auth.decorators import login_required
+from django.db.models import Prefetch
 from django.shortcuts import redirect, render
 
 from app_english import forms
@@ -25,7 +26,7 @@ def index(request):
 
 #login required for student and admin
 @login_required
-def cours_view(request):
+def cours_view(request, cours_id):
     if request.method == "POST":
         form = forms.CoursForm(request.POST)
         if form.is_valid():
@@ -41,6 +42,7 @@ def cours_view(request):
             stream = request.user.student.stream
             level = request.user.student.level
             all_cours = Cours.objects.filter(
+                id = cours_id,
                 stream__name=stream,
                 level=level
             )
@@ -82,20 +84,34 @@ def stream_view(request):
 
 @login_required
 def unit_view(request):
-    if request.method == "POST":
-        form = forms.UnitForm(request.POST)
+    form = forms.UnitForm()
 
+    if request.method == "POST" and request.user.is_superuser:
+        form = forms.UnitForm(request.POST)
         if form.is_valid():
             form.save()
-            return render("index")
+            return redirect("units")
+
+    if request.user.is_superuser:
+        all_units = Unit.objects.select_related("stream").prefetch_related("cours_set")
     else:
-        all_units = Unit.objects.all()
-        form = forms.UnitForm()
+        student = request.user.student
+        student_courses = Cours.objects.filter(
+            stream__name=student.stream,
+            level=student.level,
+        ).select_related("stream")
+        all_units = Unit.objects.filter(
+            level=student.level,
+            stream__name=student.stream,
+        ).select_related("stream").prefetch_related(
+            Prefetch("cours_set", queryset=student_courses)
+        )
+
     context = {
-        'form' : form,
-        'all_units' : all_units
+        "form": form,
+        "all_units": all_units,
     }
-    return render(request,"unit.html",context)
+    return render(request, "units.html", context)
 
 @login_required
 def exam_view(request):
