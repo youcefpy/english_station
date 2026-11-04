@@ -90,7 +90,6 @@ def unit_view(request):
         if form.is_valid():
             form.save()
             return redirect("units")
-
     if request.user.is_superuser:
         all_units = Unit.objects.select_related("stream").prefetch_related("cours_set")
     else:
@@ -127,7 +126,6 @@ def exam_view(request):
     context = {
         'form' : form,
         'all_exams' : all_exams # same here we dont need to get all exams
-
     }
     return render(request,"exam.html",context)
 

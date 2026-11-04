@@ -1,5 +1,5 @@
-from this import s
 import os
+from email.mime.base import MIMEBase
 
 from django.conf import settings
 from django.core.validators import (
@@ -9,7 +9,12 @@ from django.core.validators import (
 )
 from django.db import models
 
-from utils import AcadimicLevelChoices, StreamNameChoices, lesson_upload_path
+from utils import (
+    AcadimicLevelChoices,
+    SemesterChoices,
+    StreamNameChoices,
+    lesson_upload_path,
+)
 
 # Create your models here.
 
@@ -30,18 +35,12 @@ class Unit(models.Model):
     level = models.IntegerField(choices=AcadimicLevelChoices)
     stream = models.ForeignKey(Stream,on_delete=models.CASCADE)
     description = models.TextField()
+    semester = models.IntegerField(choices=SemesterChoices)
     class Meta:
         ordering  = ["number"]  # noqa: RUF012
 
     def __str__(self):
         return f"{self.name}"
-
-class Semester(models.Model):
-    number = models.IntegerField()
-    unit = models.ForeignKey(Unit,on_delete=models.CASCADE)
-    level = models.IntegerField(choices=AcadimicLevelChoices)
-    def __str__(self):
-        return f"{self.number}, {self.unit.name}, {self.level}"
 
 class Cours(models.Model):
     class FormatCours(models.TextChoices):
@@ -58,7 +57,7 @@ class Cours(models.Model):
     description = models.TextField()
     level = models.IntegerField(choices=AcadimicLevelChoices)
     stream = models.ForeignKey(Stream,on_delete=models.CASCADE)
-    unit = models.ForeignKey(Unit,on_delete=models.CASCADE)
+    unit = models.ForeignKey(Unit,on_delete=models.CASCADE,related_name='cours_set')
     format_cours = models.CharField(max_length=30,choices=FormatCours,default=FormatCours.PDF)
     lesson = models.FileField(upload_to=lesson_upload_path,
         validators=[
