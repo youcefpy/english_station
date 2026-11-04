@@ -18,8 +18,19 @@ def check_information_student_view(request):
 
 @login_required
 def index(request):
+    all_units = Unit.objects.none()
+    levels = []
+    if request.user.is_superuser:
+        # get level
+            # get stream
+                # get semester
+                    # redirected to units
+                        # get cours of the unit
+        all_units = Unit.objects.all()
+        levels = all_units.order_by().values_list("level", flat=True).distinct()
     context = {
-
+        'all_units' : all_units,
+        'levels': levels
     }
     return render(request,'index.html',context=context)
 
@@ -55,8 +66,9 @@ def cours_view(request, cours_id):
     return render(request,'cours.html',context=context)
 
 @login_required
-def stream_view(request):
+def stream_view(request, level=None):
     # only super user can add stream
+    form = forms.StreamForm()
     if request.user.is_superuser:
         if request.method == "POST":
                 form = forms.StreamForm(request.POST)
@@ -66,6 +78,7 @@ def stream_view(request):
     if request.user.is_authenticated:
         if request.user.is_superuser:
             all_streams = Stream.objects.all()
+            stream_by_level = Stream.objects.filter(level=level) if level is not None else all_streams
         else:
             stream = request.user.student.stream
             level = request.user.student.level
@@ -74,10 +87,10 @@ def stream_view(request):
                 level = level
             )
     else:
-        form = forms.Stream()
+        form = forms.StreamForm()
     context = {
         "form" : form,
-        "streams" : all_streams
+        "streams" : stream_by_level if request.user.is_superuser else all_streams
     }
 
     return render(request,'streams.html',context)
@@ -91,6 +104,14 @@ def unit_view(request):
             form.save()
             return redirect("units")
     if request.user.is_superuser:
+        # groupe by level 
+        # after grouping by level we need to group by stream 
+        # after that we pass to unit 
+        # we select level first : ==> 1,2,3
+        # after we select the stream 
+        # after we select the unit of the stream
+        # super user has to see all cours of all levels of all streams
+
         all_units = Unit.objects.select_related("stream").prefetch_related("cours_set")
     else:
         student = request.user.student

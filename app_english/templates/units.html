@@ -30,7 +30,14 @@
         </section>
     {% endif %}
 
-    {% if all_units %}
+    {% if all_units and user.is_superuser %}
+            <!-- first we need to select the level -->
+            {% for level in all_units.stream.level %}
+                <a href="#">{{ level }}</a>
+            {% endfor %}
+    {% endif %}
+    
+    {% if all_units and not user.is_superuser %}
         <div class="row g-4">
             {% for unit in all_units %}
                 <div class="col-12">
