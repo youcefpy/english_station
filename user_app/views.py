@@ -1,16 +1,17 @@
-import string
 import os
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
+from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.http import require_POST
 
 from user_app.services import send_password_setup_email
+from utils import AcadimicLevelChoices, StreamNameChoices
 
 from .forms import StudentForm, StudentFormSetPassWord, StudentLogin
 from .models import Student
@@ -119,21 +120,59 @@ def approve_student(request, student_id):
     return redirect("admin_panel")
 
 @staff_member_required
-def admin_page(request,stream = None, level = None):
+def admin_page(request):
     students = Student.objects.all()
-    # group students by level.
-        # after that group student by student by stream
-    # search student by name, by stream and by level
+    level = request.GET.get("level", "")
+    stream = request.GET.get("stream", "")
+    search = request.GET.get("q", "").strip()
+
+    # Apply optional filters before arranging students into level and stream groups.
     if level:
-        student_level = Student.objects.filter(level=level)
+        students = students.filter(level=level)
     if stream:
-        student_stream = Student.objects.filter(stream=stream)
-    if stream and level:
-        student_filter_stream_level = Student.objects.filter(stream=stream, level=level)
+        students = students.filter(stream=stream)
+    if search:
+        students = students.filter(
+            Q(first_name__icontains=search)
+            | Q(last_name__icontains=search)
+            | Q(email__icontains=search)
+        )
+
+    filtered_students = list(
+        students.order_by("level", "stream", "last_name", "first_name")
+    )
+    student_groups = []
+    for level_value, level_label in AcadimicLevelChoices.choices:
+        level_students = [
+            student for student in filtered_students
+            if student.level == level_value
+        ]
+        stream_groups = []
+        for stream_value, stream_label in StreamNameChoices.choices:
+            stream_students = [
+                student for student in level_students
+                if student.stream == stream_value
+            ]
+            if stream_students:
+                stream_groups.append({
+                    "value": stream_value,
+                    "label": stream_label,
+                    "students": stream_students,
+                })
+        if stream_groups:
+            student_groups.append({
+                "value": level_value,
+                "label": level_label,
+                "streams": stream_groups,
+            })
+
     context = {
-        'students':students,
-        'student_level': student_level,
-        'student_stream': student_stream,
-        'student_filter_stream_level' : student_filter_stream_level,
+        "students": filtered_students,
+        "student_groups": student_groups,
+        "level_choices": AcadimicLevelChoices.choices,
+        "stream_choices": StreamNameChoices.choices,
+        "selected_level": level,
+        "selected_stream": stream,
+        "search": search,
     }
-    return render(request, 'admin_panel.html', context= context)
+    return render(request, "admin_panel.html", context=context)
