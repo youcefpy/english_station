@@ -3,38 +3,74 @@
 {% block title %}Admin Panel{% endblock %}
 
 {% block content %}
-<table>
-  <thead>
-    <tr>
-      <th>First name</th>
-      <th>Last name</th>
-      <th>Acadimic level</th>
-      <th>Stream</th>
-      <th>actions(active/disable)</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for student in students %}    
-        <tr>
-            <td>{{ student.first_name }}</td>
-            <td>{{ student.last_name }}</td>
-            <td>{{ student.level }}</td>
-            <td>{{ student.stream }}</td>
-            <td>
-                {% if student.is_active %}
-                    <span>Active</span>
-                {% else %}
-                    <form method="post" action="{% url 'approve_student' student.id %}">
-                        {% csrf_token %}
-                        <button type="submit">Activate</button>
-                    </form>
-                {% endif %}
-                <button>delete</button>
-            </td>
-        </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<main class="container py-4 py-lg-5">
+    <header class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4 mb-lg-5">
+        <div>
+            <p class="text-primary text-uppercase fw-semibold small mb-2">Administration</p>
+            <h1 class="display-6 fw-bold mb-2">Student registrations</h1>
+            <p class="text-muted mb-0">Review student accounts and activate approved registrations.</p>
+        </div>
+        <span class="badge rounded-pill text-bg-light border fs-6 px-3 py-2">
+            {{ students|length }} student{{ students|length|pluralize }}
+        </span>
+    </header>
 
-
+    <section class="card border-0 shadow-sm" aria-labelledby="student-list-heading">
+        <div class="card-header bg-white border-0 px-4 pt-4 pb-0">
+            <h2 class="h5 mb-3" id="student-list-heading">All students</h2>
+        </div>
+        {% if students %}
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4" scope="col">Student</th>
+                            <th scope="col">Academic level</th>
+                            <th scope="col">Stream</th>
+                            <th scope="col">Status</th>
+                            <th class="text-end pe-4" scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for student in students %}
+                            <tr>
+                                <td class="ps-4">
+                                    <div class="fw-semibold">{{ student.first_name }} {{ student.last_name }}</div>
+                                    <div class="small text-muted">{{ student.email }}</div>
+                                </td>
+                                <td>{{ student.get_level_display }}</td>
+                                <td>{{ student.get_stream_display }}</td>
+                                <td>
+                                    {% if student.is_active %}
+                                        <span class="badge rounded-pill text-bg-success">Active</span>
+                                    {% else %}
+                                        <span class="badge rounded-pill text-bg-warning">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="d-inline-flex flex-wrap justify-content-end gap-2">
+                                        {% if not student.is_active %}
+                                            <form method="post" action="{% url 'approve_student' student.id %}" class="m-0">
+                                                {% csrf_token %}
+                                                <button class="btn btn-sm btn-primary" type="submit">Activate</button>
+                                            </form>
+                                        {% endif %}
+                                        <button class="btn btn-sm btn-outline-danger" type="button" disabled>Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="card-body px-4 pb-4">
+                <div class="rounded-3 bg-light text-center p-5">
+                    <h3 class="h5">No student registrations</h3>
+                    <p class="text-muted mb-0">New registrations will appear here for review.</p>
+                </div>
+            </div>
+        {% endif %}
+    </section>
+</main>
 {% endblock %}

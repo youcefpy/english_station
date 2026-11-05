@@ -1,3 +1,4 @@
+import string
 import os
 
 from django.contrib.admin.views.decorators import staff_member_required
@@ -118,9 +119,21 @@ def approve_student(request, student_id):
     return redirect("admin_panel")
 
 @staff_member_required
-def admin_page(request):
+def admin_page(request,stream = None, level = None):
     students = Student.objects.all()
+    # group students by level.
+        # after that group student by student by stream
+    # search student by name, by stream and by level
+    if level:
+        student_level = Student.objects.filter(level=level)
+    if stream:
+        student_stream = Student.objects.filter(stream=stream)
+    if stream and level:
+        student_filter_stream_level = Student.objects.filter(stream=stream, level=level)
     context = {
         'students':students,
+        'student_level': student_level,
+        'student_stream': student_stream,
+        'student_filter_stream_level' : student_filter_stream_level,
     }
     return render(request, 'admin_panel.html', context= context)

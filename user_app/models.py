@@ -1,3 +1,5 @@
+from django import forms
+from django.contrib.admin.utils import label_for_field
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -12,7 +14,7 @@ class User(AbstractUser):
 class Student(User):
     level = models.IntegerField(choices=AcadimicLevelChoices,null=False)
     stream = models.CharField(max_length=50,choices=StreamNameChoices, null=False)
-
+    group = models.CharField(max_length=10)
     def clean(self):
         super().clean()
         if self.level > 3 or self.level < 1:

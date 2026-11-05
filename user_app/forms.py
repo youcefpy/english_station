@@ -7,7 +7,7 @@ from .models import Admin, Student
 class StudentForm(ModelForm):
     class Meta:
         model = Student
-        fields = ['first_name','last_name','email','level','stream']
+        fields = ['first_name','last_name','email','level','stream','group']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -23,9 +23,9 @@ class StudentFormSetPassWord(ModelForm):
     )
     class Meta:
         model= Student
-        fields = ['password']
+        fields = ['password']  # noqa: RUF012
 
-        widgets = {
+        widgets = {  # noqa: RUF012
             'password': forms.PasswordInput(attrs={'class': 'form-control'}),
             }
 
