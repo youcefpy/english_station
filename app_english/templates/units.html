@@ -37,7 +37,7 @@
             {% endfor %}
     {% endif %}
     
-    {% if all_units and not user.is_superuser %}
+    {% if all_units %}
         <div class="row g-4">
             {% for unit in all_units %}
                 <div class="col-12">
@@ -49,7 +49,7 @@
                                     <h2 class="h3 mb-2">{{ unit.name }}</h2>
                                     <p class="text-muted mb-0">{{ unit.description }}</p>
                                 </div>
-                                <span class="badge rounded-pill text-bg-light border align-self-md-start">{{ unit.get_level_display }}</span>
+                                <span class="badge rounded-pill text-bg-light border align-self-md-start" style="color: black;">{{ unit.get_level_display }}</span>
                             </div>
                             <hr>
                             <h3 class="h5 mb-3">Courses in this unit</h3>

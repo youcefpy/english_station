@@ -2,10 +2,11 @@ from ssl import Options
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from app_english import forms
 from app_english.models import Cours, Exam, Question, Stream, Unit
+from utils import SemesterChoices
 
 
 # Create your views here.
@@ -20,17 +21,18 @@ def check_information_student_view(request):
 def index(request):
     all_units = Unit.objects.none()
     levels = []
+    stream = None
+
     if request.user.is_superuser:
-        # get level
-            # get stream
-                # get semester
-                    # redirected to units
-                        # get cours of the unit
         all_units = Unit.objects.all()
         levels = all_units.order_by().values_list("level", flat=True).distinct()
+    else:
+        student = request.user.student
+        stream = Stream.objects.filter(name=student.stream, level=student.level).first()
     context = {
         'all_units' : all_units,
-        'levels': levels
+        'levels': levels,
+        'stream':stream
     }
     return render(request,'index.html',context=context)
 
@@ -69,12 +71,12 @@ def cours_view(request, cours_id):
 def stream_view(request, level=None):
     # only super user can add stream
     form = forms.StreamForm()
-    if request.user.is_superuser:
-        if request.method == "POST":
-                form = forms.StreamForm(request.POST)
-                if form.is_valid():
-                    form.save()
-                return redirect('index')
+    if request.user.is_superuser and request.method == "POST":
+        form = forms.StreamForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return redirect('index')
+
     if request.user.is_authenticated:
         if request.user.is_superuser:
             all_streams = Stream.objects.all()
@@ -96,7 +98,7 @@ def stream_view(request, level=None):
     return render(request,'streams.html',context)
 
 @login_required
-def unit_view(request):
+def unit_view(request, stream_id=None, semester=None):
     form = forms.UnitForm()
     if request.method == "POST" and request.user.is_superuser:
         form = forms.UnitForm(request.POST)
@@ -104,15 +106,9 @@ def unit_view(request):
             form.save()
             return redirect("units")
     if request.user.is_superuser:
-        # groupe by level 
-        # after grouping by level we need to group by stream 
-        # after that we pass to unit 
-        # we select level first : ==> 1,2,3
-        # after we select the stream 
-        # after we select the unit of the stream
-        # super user has to see all cours of all levels of all streams
-
         all_units = Unit.objects.select_related("stream").prefetch_related("cours_set")
+        if stream_id is not None:
+            all_units = all_units.filter(stream_id=stream_id,semester=semester)
     else:
         student = request.user.student
         student_courses = Cours.objects.filter(
@@ -125,12 +121,23 @@ def unit_view(request):
         ).select_related("stream").prefetch_related(
             Prefetch("cours_set", queryset=student_courses)
         )
+        if semester is not None:
+            all_units = all_units.filter(semester=semester)
 
     context = {
         "form": form,
         "all_units": all_units,
     }
     return render(request, "units.html", context)
+
+@login_required
+def semester_view(request, stream_id):
+    stream = get_object_or_404(Stream, pk=stream_id)
+    context = {
+        "stream": stream,
+        "semesters": SemesterChoices.choices,
+    }
+    return render(request, "semester_selection.html", context)
 
 @login_required
 def exam_view(request):
