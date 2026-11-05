@@ -126,10 +126,11 @@ def admin_page(request):
     stream = request.GET.get("stream", "")
     group = request.GET.get("group", "")
     search = request.GET.get("q", "").strip()
+
     list_groups = []
-    groups = Student.objects.only('group').all().order_by('level')
-    for group in groups:
-        list_groups.append(group.group)
+    level_groups = students.values_list("level", "group").distinct().order_by("level", "group")
+    for _ , group in level_groups:
+        list_groups.append(group)
     # Apply optional filters before arranging students into level and stream groups.
     if level:
         students = students.filter(level=level)
@@ -142,7 +143,6 @@ def admin_page(request):
             Q(first_name__icontains=search)
             | Q(last_name__icontains=search)
             | Q(email__icontains=search)
-            | Q(group__icontains=group)
         )
 
     filtered_students = list(
@@ -176,7 +176,7 @@ def admin_page(request):
     context = {
         "students": filtered_students,
         "student_groups": student_groups,
-        'groups': group,
+        'list_groups': list_groups,
         "level_choices": AcadimicLevelChoices.choices,
         "stream_choices": StreamNameChoices.choices,
         "selected_level": level,

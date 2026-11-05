@@ -44,9 +44,9 @@
                 <div class="col-12 col-md-3">
                     <label class="form-label fw-semibold" for="group-filter">Group</label>
                     <select class="form-select" name="group" id="group-filter">
-                        <option value="">Group</option>
-                        {% for value, label in stream_choices %}
-                            <option value="{{ value }}" {% if selected_stream == value %}selected{% endif %}>{{ label }}</option>
+                        <option value="">---</option>
+                        {% for value in list_groups %}
+                            <option value="{{ value }}">{{ value }}</option>
                         {% endfor %}
                     </select>
                 </div>
