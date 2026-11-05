@@ -125,17 +125,22 @@ def admin_page(request):
     level = request.GET.get("level", "")
     stream = request.GET.get("stream", "")
     search = request.GET.get("q", "").strip()
+    group = request.GET.get('group','')
 
     # Apply optional filters before arranging students into level and stream groups.
     if level:
         students = students.filter(level=level)
     if stream:
         students = students.filter(stream=stream)
+    if group:
+        students = students.filter(group=group)
+
     if search:
         students = students.filter(
             Q(first_name__icontains=search)
             | Q(last_name__icontains=search)
             | Q(email__icontains=search)
+            | Q(group__icontains=group)
         )
 
     filtered_students = list(
