@@ -7,8 +7,15 @@ from .models import Admin, Student
 class StudentForm(ModelForm):
     class Meta:
         model = Student
-        fields = ['first_name','last_name','email','level','stream','group']
-
+        fields = ['first_name','last_name','email','level','stream','group']  # noqa: RUF012
+        widgets={  # noqa: RUF012
+            "first_name": forms.TextInput(attrs={'placeholder':"Joe"}),
+            "last_name": forms.TextInput(attrs={'placeholder':'Doe'}),
+            "email": forms.TextInput(attrs={'placeholder':'joe.doe.student@toto.com'}),
+            "level": forms.TextInput(attrs={'placeholder':'1'}),
+            "stream" : forms.TextInput(attrs={'placeholder':'Science'}),
+            "group": forms.TextInput(attrs={'placeholder':'3S2'})
+        }
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
