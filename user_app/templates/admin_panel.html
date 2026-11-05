@@ -40,6 +40,18 @@
                         {% endfor %}
                     </select>
                 </div>
+
+                <div class="col-12 col-md-3">
+                    <label class="form-label fw-semibold" for="group-filter">Group</label>
+                    <select class="form-select" name="group" id="group-filter">
+                        <option value="">Group</option>
+                        {% for value, label in stream_choices %}
+                            <option value="{{ value }}" {% if selected_stream == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
                 <div class="col-12 col-md-2 d-flex gap-2">
                     <button class="btn btn-primary flex-grow-1" type="submit">Filter</button>
                     <a class="btn btn-outline-secondary" href="{% url 'admin_panel' %}">Reset</a>
