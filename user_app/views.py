@@ -128,8 +128,8 @@ def admin_page(request):
     search = request.GET.get("q", "").strip()
 
     list_groups = []
-    level_groups = students.values_list("level", "group").distinct().order_by("level", "group")
-    for _ , group in level_groups:
+    level_groups = students.values_list("group").distinct().order_by("level", "group")
+    for group in level_groups:
         list_groups.append(group)
     # Apply optional filters before arranging students into level and stream groups.
     if level:
