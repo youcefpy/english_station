@@ -143,6 +143,7 @@ def admin_page(request):
             Q(first_name__icontains=search)
             | Q(last_name__icontains=search)
             | Q(email__icontains=search)
+            | Q(group__icontains=group)
         )
 
     filtered_students = list(
