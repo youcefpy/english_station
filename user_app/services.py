@@ -32,3 +32,17 @@ def send_password_setup_email(student, request):
             student.email
         ],
     )
+
+
+def send_student_deactivated_email(student):
+    send_mail(
+        subject="Validate Registration",
+        message=(
+            f"Hello,{student.first_name}\n"
+            f"We have been deactivate your account"
+        ),
+        from_email= os.getenv(key="EMAIL_HOST_USER"),
+        recipient_list = [
+            student.email
+        ],
+    )

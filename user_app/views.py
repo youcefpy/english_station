@@ -10,7 +10,7 @@ from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views.decorators.http import require_POST
 
-from user_app.services import send_password_setup_email
+from user_app.services import send_password_setup_email, send_student_deactivated_email
 from utils import AcadimicLevelChoices, StreamNameChoices
 
 from .forms import StudentForm, StudentFormSetPassWord, StudentLogin
@@ -120,6 +120,16 @@ def approve_student(request, student_id):
     return redirect("admin_panel")
 
 @staff_member_required
+@require_POST
+def deactivate_student(request,student_id):
+    student = get_object_or_404(Student,pk=student_id)
+    if student.is_active:
+        student.is_active = False
+        student.save(update_fields=['is_active'])
+        send_student_deactivated_email(student)
+    return redirect(to="admin_panel")
+
+@staff_member_required
 def admin_page(request):
     students = Student.objects.all()
     level = request.GET.get("level", "")
@@ -127,17 +137,13 @@ def admin_page(request):
     group = request.GET.get("group", "")
     search = request.GET.get("q", "").strip()
 
-    list_groups = []
-    level_groups = students.values_list("group").distinct().order_by("level", "group")
-    for group in level_groups:
-        list_groups.append(group)
     # Apply optional filters before arranging students into level and stream groups.
     if level:
-        students = students.filter(level=level)
+        students = students.filter(level=level).order_by('level')
     if stream:
-        students = students.filter(stream=stream)
+        students = students.filter(stream=stream).order_by('level')
     if group:
-        students = students.filter(group=group)
+        students = students.filter(group=group).order_by('level')
     if search:
         students = students.filter(
             Q(first_name__icontains=search)
@@ -173,6 +179,11 @@ def admin_page(request):
                 "label": level_label,
                 "streams": stream_groups,
             })
+
+    list_groups = []
+    level_groups = students.values_list("level","group").distinct().order_by("level", "group")
+    for _ ,group in level_groups:
+        list_groups.append(group)  # noqa: PERF402
 
     context = {
         "students": filtered_students,

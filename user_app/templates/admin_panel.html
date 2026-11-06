@@ -113,15 +113,25 @@
                                                     <span class="badge rounded-pill text-bg-warning" style="color: orange;">Pending</span>
                                                 {% endif %}
                                             </td>
-                                            <td class="text-end pe-4">
+                                            <td class="text-end pe-4" style="display: flex;flex-direction: row;gap: 1rem;justify-items: end;justify-content: end;">
+
                                                 {% if not student.is_active %}
-                                                    <form method="post" action="{% url 'approve_student' student.id %}" class="m-0">
-                                                        {% csrf_token %}
-                                                        <button class="btn btn-sm btn-primary" type="submit">Activate</button>
-                                                    </form>
+                                                    <div>
+                                                      <form method="post" action="{% url 'approve_student' student.id %}" class="m-0">
+                                                          {% csrf_token %}
+                                                          <button class="btn btn-sm btn-primary" type="submit">Activate</button>
+                                                      </form>
+                                                    </div>
                                                 {% else %}
-                                                    <span class="small text-muted">No action needed</span>
-                                                    <button class="btn btn-danger">Delete</button>
+                                                    <div>
+                                                      <form method="post" action="{% url 'deactivate_student' student.id %}" class="m-0">
+                                                          {% csrf_token %}
+                                                          <button class="btn btn-sm btn-warning" type="submit">Deactivate</button>
+                                                      </form>
+                                                    </div>
+                                                    <div>
+                                                      <button class="btn btn-danger">Delete</button>
+                                                    </div>
                                                 {% endif %}
                                             </td>
                                         </tr>
