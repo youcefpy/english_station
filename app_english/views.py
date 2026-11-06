@@ -48,10 +48,10 @@ def cours_view(request, cours_id):
             return redirect('index')
     else :
         #for admin
-        # if request.user.is_authenticated and request.user.is_superuser:
-        #     cours = Cours.objects.all()
+        if request.user.is_authenticated and request.user.is_superuser:
+            cours = Cours.objects.all().filter(id=cours_id)
         # for student
-        if request.user.is_authenticated:
+        if request.user.is_authenticated and not request.user.is_superuser:
             stream = request.user.student.stream
             level = request.user.student.level
             cours = Cours.objects.filter(
