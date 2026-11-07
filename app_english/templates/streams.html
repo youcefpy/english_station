@@ -25,7 +25,7 @@
         {% for stream in streams %}
             <tr>
                 <td>{{ stream.id }}</td>
-                <td><a href="{% url 'semesters_by_stream' stream.id %}">{{ stream.get_name_display }}</a></td>
+                <td><a href="{% url 'units' %}"> units </a></td>
                 <td>{{ stream.level }}</td>
             </tr>
         {% endfor %}

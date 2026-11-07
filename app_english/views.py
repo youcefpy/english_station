@@ -48,7 +48,7 @@ def cours_view(request, cours_id):
     else :
         #for admin
         if request.user.is_authenticated and request.user.is_superuser:
-            cours = Cours.objects.all().filter(id=cours_id)
+            cours = Cours.objects.all().filter(id=cours_id).first()
         # for student
         if request.user.is_authenticated and not request.user.is_superuser:
             stream = request.user.student.stream
