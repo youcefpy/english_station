@@ -10,10 +10,6 @@ class AcadimicLevelChoices(models.IntegerChoices):
     SECOND_YEAR = 2
     THIRD_LEVEL = 3
 
-class SemesterChoices(models.IntegerChoices):
-    SEMESTER_ONE = 1
-    SEMESTER_TWO = 2
-    SEMESTER_THREE = 3
 class StreamNameChoices(models.TextChoices):
     # Common core (first year)
     COMMON_CORE_SCIENCE_TECH = "common_core_st", "Tronc commun Sciences et Technologie"

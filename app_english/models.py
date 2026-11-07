@@ -11,7 +11,6 @@ from django.db import models
 
 from utils import (
     AcadimicLevelChoices,
-    SemesterChoices,
     StreamNameChoices,
     lesson_upload_path,
 )
@@ -35,7 +34,6 @@ class Unit(models.Model):
     level = models.IntegerField(choices=AcadimicLevelChoices)
     stream = models.ForeignKey(Stream,on_delete=models.CASCADE)
     description = models.TextField()
-    semester = models.IntegerField(choices=SemesterChoices)
     class Meta:
         ordering  = ["number"]  # noqa: RUF012
 

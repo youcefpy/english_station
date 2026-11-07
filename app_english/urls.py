@@ -23,8 +23,6 @@ urlpatterns = [
     path('', views.index, name="index"),
     path('check-info-student/',views.check_information_student_view,name='check-student-sigup'),
     path('units/',views.unit_view,name='units'),
-    path('streams/<int:stream_id>/semesters/', views.semester_view, name='semesters_by_stream'),
-    path('streams/<int:stream_id>/semesters/<int:semester>/units/', views.unit_view, name='units_by_semester'),
     path('streams/<int:level>/', views.stream_view, name='streams_by_level'),
     path('cours/<int:cours_id>',views.cours_view, name="cours")
 ]

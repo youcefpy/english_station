@@ -2,11 +2,10 @@ from ssl import Options
 
 from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 
 from app_english import forms
 from app_english.models import Cours, Exam, Question, Stream, Unit
-from utils import SemesterChoices
 
 
 # Create your views here.
@@ -98,7 +97,7 @@ def stream_view(request, level=None):
     return render(request,'streams.html',context)
 
 @login_required
-def unit_view(request, stream_id=None, semester=None):
+def unit_view(request, stream_id=None):
     form = forms.UnitForm()
     if request.method == "POST" and request.user.is_superuser:
         form = forms.UnitForm(request.POST)
@@ -108,7 +107,7 @@ def unit_view(request, stream_id=None, semester=None):
     if request.user.is_superuser:
         all_units = Unit.objects.select_related("stream").prefetch_related("cours_set")
         if stream_id is not None:
-            all_units = all_units.filter(stream_id=stream_id,semester=semester)
+            all_units = all_units.filter(stream_id=stream_id)
     else:
         student = request.user.student
         student_courses = Cours.objects.filter(
@@ -121,23 +120,12 @@ def unit_view(request, stream_id=None, semester=None):
         ).select_related("stream").prefetch_related(
             Prefetch("cours_set", queryset=student_courses)
         )
-        if semester is not None:
-            all_units = all_units.filter(semester=semester)
 
     context = {
         "form": form,
         "all_units": all_units,
     }
     return render(request, "units.html", context)
-
-@login_required
-def semester_view(request, stream_id):
-    stream = get_object_or_404(Stream, pk=stream_id)
-    context = {
-        "stream": stream,
-        "semesters": SemesterChoices.choices,
-    }
-    return render(request, "semester_selection.html", context)
 
 @login_required
 def exam_view(request):
