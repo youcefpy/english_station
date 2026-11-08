@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'app_english',
     'user_app',
+    "rest_framework",
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,12 @@ AUTH_USER_MODEL = 'user_app.User'
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 X_FRAME_OPTIONS = "SAMEORIGIN"
+
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
+    ]
+}
