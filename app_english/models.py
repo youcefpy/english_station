@@ -1,6 +1,3 @@
-import os
-from email.mime.base import MIMEBase
-
 from django.conf import settings
 from django.core.validators import (
     FileExtensionValidator,
