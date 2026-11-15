@@ -1,9 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
 from django.shortcuts import redirect, render
+from rest_framework import generics
+from rest_framework.permissions import IsAdminUser
 
 from app_english import forms
 from app_english.models import Cours, Exam, Option, Question, Stream, Unit
+
+from .seriliazers import StreamSerializer
 
 
 # Create your views here.
@@ -183,3 +187,7 @@ def options_view(request):
 # View Django rest_framework
 ##################################################
 
+class StreamList(generics.ListCreateAPIView):
+    queryset = Stream.objects.all()
+    serializer_class = StreamSerializer
+    permission_class=[IsAdminUser]
