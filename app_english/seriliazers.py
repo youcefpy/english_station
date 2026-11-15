@@ -1,3 +1,4 @@
+from django.middleware.security import SecurityMiddleware
 from rest_framework import serializers
 
 from .models import Answer, Cours, Exam, Option, Stream, Unit
@@ -10,18 +11,19 @@ class StreamSerializer(serializers.ModelSerializer):
 
 class UnitSerializer(serializers.ModelSerializer):
 
-    stream = StreamSerializer(many=True,read_only=True)
+    stream_name = serializers.CharField(source='stream.name')
     class Meta:
         model = Unit
-        fields = ("number","name","level","stream","description")
+        fields = ("number","name","level","stream_name","description")
 
 
 class CoursSerializer(serializers.ModelSerializer):
-    stream = StreamSerializer(many=True, read_only=True)
-    unit = UnitSerializer(many=True, read_only=True)
+    stream_name = serializers.CharField(source='stream.name')
+    unit_number = serializers.IntegerField(source="unit.number")
+    unit_name = serializers.CharField(source='unit.name')
     class Meta:
         model = Cours
-        fields = ("title","description","level","stream","unit","format_cours","lesson")
+        fields = ("title","description","level","stream_name","unit_number","unit_name","format_cours","lesson")
 
 class ExamSerializer(serializers.ModelSerializer):
     class Meta:
