@@ -1,6 +1,7 @@
+from django.forms import ModelForm
 from django import forms
 
-from .models import AcadimicLevelChoices, Cours, Exam, Question, Stream, Unit
+from .models import AcadimicLevelChoices, Cours, Exam, Question, Stream, Unit, Option
 
 
 class StreamSelect(forms.Select):
@@ -98,3 +99,9 @@ class QuestionForm(forms.ModelForm):
     class Meta:
         model=Question
         fields="__all__"  # noqa: DJ007
+
+class OptionForm(forms.ModelForm):
+
+    class Meta:
+        model = Option
+        fields = "__all__"

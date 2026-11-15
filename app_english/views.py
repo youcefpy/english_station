@@ -1,11 +1,9 @@
-from ssl import Options
-
 from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
 from django.shortcuts import redirect, render
 
 from app_english import forms
-from app_english.models import Cours, Exam, Question, Stream, Unit
+from app_english.models import Cours, Exam, Option, Question, Stream, Unit
 
 
 # Create your views here.
@@ -170,11 +168,18 @@ def options_view(request):
             form.save()
         return render("index")
     else:
-        all_options = Options.objects.all() # this is not correct we need to filter
+        all_options = Option.objects.all() # this is not correct we need to filter
         #exams by stream and by acadimic level
-        form = forms.OptionsForm()
+        form = forms.OptionForm()
     context = {
         'form' : form,
         'all_options' : all_options
     }
     return render(request,"question.html",context)
+
+
+
+##################################################
+# View Django rest_framework
+##################################################
+
